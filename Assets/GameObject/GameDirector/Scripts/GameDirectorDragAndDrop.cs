@@ -92,7 +92,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     void Drag()
     {
 
-        Debug.Log("drag");
+        //Debug.Log("drag");
         if (!Input.GetMouseButtonUp(0))
         {
             dragAndDropObject.transform.position = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x, 
