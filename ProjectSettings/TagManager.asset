@@ -5,8 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Gear
-  - 'GearFactory '
   - StartGenerator
+  - GearGenerate
+  - GearFactory
   layers:
   - Default
   - TransparentFX

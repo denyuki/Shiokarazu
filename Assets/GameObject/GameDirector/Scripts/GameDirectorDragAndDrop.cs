@@ -59,7 +59,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
             //ギアだったらそのまま移動へ
             if (hit2d && hit2d.collider.gameObject.tag == Common.Gear)
             {
-
+                
                 dragAndDropObject = hit2d.collider.gameObject;
 
                 StartPosition();  //移動前のポジションを保存
@@ -69,6 +69,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
             //ギアジェネレーターだったらギアを生成
             else if(hit2d && hit2d.collider.gameObject.tag == Common.GearFactory)
             {
+
+                Debug.Log("factory");
                 Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
                                                                camera.ScreenToWorldPoint(Input.mousePosition).y,
                                                                0);
