@@ -5,12 +5,12 @@ using UnityEngine;
 public class GearTouch : MonoBehaviour
 {
     //半径取得用
-    Bounds bounds;
+    SpriteRenderer spriteRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -24,13 +24,15 @@ public class GearTouch : MonoBehaviour
         Vector3 nearGearPosition = collision.transform.position;
         Vector3 gearPosition = transform.position;
 
-        float gearVectorX = Mathf.Abs(gearPosition.x - nearGearPosition.x);
-        float gearVectorY = Mathf.Abs(gearPosition.y - nearGearPosition.y);
-        float gearVectorZ = Mathf.Abs(gearPosition.z - nearGearPosition.z);
+        Vector3 gearVector = gearPosition - nearGearPosition;
 
-        Vector3 gearVector = new Vector3(gearVectorX, gearVectorY, gearVectorZ);
+        SpriteRenderer spriteRendererOther = collision.gameObject.GetComponent<SpriteRenderer>();
+
+        float sum = (this.spriteRenderer.bounds.size.x + spriteRendererOther.bounds.size.x)/2;
+
+        Debug.Log(this.spriteRenderer.bounds.size.x);
 
         //ギアの位置を移動する
-        transform.position = collision.transform.position + gearVector; 
+        transform.position = collision.transform.position + gearVector.normalized * sum;
     }
 }

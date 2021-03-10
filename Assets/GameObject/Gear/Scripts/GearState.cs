@@ -30,6 +30,14 @@ public class GearState : MonoBehaviour
     public GameObject beforeGear;
     bool beforeGearCheck = true;
 
+    //始めのギアはgearDistanceを更新しないようにするための変数
+    [SerializeField]
+    bool startGear = false;
+
+    //触れているギアの情報を保持しておく変数
+    List<GearState> gearList = new List<GearState>();
+    int gearDistance = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,6 +81,11 @@ public class GearState : MonoBehaviour
         }
     }
 
+    public float ReturnGearReceivePower()
+    {
+        return this.gearReceivePower;
+    }
+
     //ギアの耐久度を減らす関数
     //引数はどれだけオーバーパワーがかかっているか
     void GearDamege()
@@ -94,14 +107,64 @@ public class GearState : MonoBehaviour
         //つながっている歯車の情報を持つ
         if(collision.gameObject.tag == "Gear")
         {
-            if (this.beforeGearCheck == true)
+            bool addList = true;
+            for(int i = 0; i < gearList.Count; ++i)
             {
-                this.beforeGear = collision.gameObject;
-                this.beforeGearCheck = false;
+                Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
+                if(gearList[i].gameObject == collision.gameObject)
+                {
+                    addList = false;
+                    break;
+                }
             }
-            
+
+            if (addList)
+            {
+                gearList.Add(collision.gameObject.GetComponent<GearState>());
+
+                if (!this.startGear)
+                {
+                    int min = 100;
+
+                    for (int i = 0; i < gearList.Count; ++i)
+                    {
+                        if (gearList[i].getGearDistance < min)
+                        {
+                            min = gearList[i].getGearDistance;
+                        }
+                    }
+
+                    this.gearDistance = min + 1;
+                }
+
+                Debug.Log(this.gearDistance);
+                /*
+                            if (this.beforeGearCheck == true)
+                            {
+                                this.beforeGear = collision.gameObject;
+                                this.beforeGearCheck = false;
+                            }
+
+                */
+            } 
         }
         
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Gear")
+        {
+            gearList.Remove(collision.gameObject.GetComponent<GearState>());
+        }
+    }
+
+    public int getGearDistance
+    {
+        get
+        {
+            return this.gearDistance;
+        }
     }
 
     public void ChangeState(State next)
