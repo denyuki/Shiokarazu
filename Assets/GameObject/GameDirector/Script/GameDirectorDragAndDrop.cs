@@ -57,7 +57,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
             RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
 
             //ギアだったらそのまま移動へ
-            if (hit2d.collider.gameObject.tag == "Gear")
+            if (hit2d && hit2d.collider.gameObject.tag == "Gear")
             {
                 Debug.Log("mous");
                 dragAndDropObject = hit2d.collider.gameObject;
@@ -67,7 +67,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
             //ギアジェネレーターだったらギアを生成
-            else if(hit2d.collider.gameObject.tag == "GearGenerate")
+            else if(hit2d && hit2d.collider.gameObject.tag == "GearGenerate")
             {
                 Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
                                                                camera.ScreenToWorldPoint(Input.mousePosition).y,
