@@ -35,7 +35,7 @@ public class GearState : MonoBehaviour
     bool startGear = false;
 
     //触れているギアの情報を保持しておく変数
-    List<GearState> gearList = new List<GearState>();
+    public List<GearState> gearList = new List<GearState>();
     int gearDistance = 0;
 
     // Start is called before the first frame update
@@ -137,7 +137,7 @@ public class GearState : MonoBehaviour
                     this.gearDistance = min + 1;
                 }
 
-                Debug.Log(this.gearDistance);
+                Debug.Log("gearDistance" + this.gearDistance + " " + this.startGear);
                 /*
                             if (this.beforeGearCheck == true)
                             {

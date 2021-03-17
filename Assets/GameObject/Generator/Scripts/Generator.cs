@@ -5,7 +5,7 @@ using UnityEngine;
 public class Generator : MonoBehaviour
 {
 
-    GameObject gear = null;
+    GearState gear = null;
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +21,9 @@ public class Generator : MonoBehaviour
 
     public bool GearConnect()
     {
-        if (gear != null)
+        if (gear != null && gear.gearList.Count > 0)
         {
+
             return ConnectChase(gear);
         }else
         {
@@ -31,29 +32,41 @@ public class Generator : MonoBehaviour
     }
 
 
-    bool ConnectChase(GameObject gear)
+    bool ConnectChase(GearState gear)
     {
-        if (gear.GetComponent<GearState>().beforeGear != null)
-        {
-            if(gear.tag == Common.GearFactory)
-            {
-                return true;
-            }
 
-            return ConnectChase(gear.GetComponent<GearState>().beforeGear);
-        }
-        else
+        int geraDistance = gear.getGearDistance;
+        Debug.Log(geraDistance);
+
+        if(geraDistance == 0)
         {
-            return false;
+
+            return true;
         }
+
+
+        int distance = gear.gearList[0].getGearDistance;
+        int count = 0;
+
+        for (int i = 1; i < gear.gearList.Count; i++)
+        {
+            if(distance > gear.gearList[i].getGearDistance)
+            {
+                distance = gear.gearList[i].getGearDistance;
+                count = i;
+            }
+        }
+
+
+        return ConnectChase(gear.gearList[count]);
     }
 
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == Common.Gear)
+        if (collision.gameObject.tag == Common.Gear)
         {
-            gear = collision.gameObject;
+            gear = collision.gameObject.GetComponent<GearState>();
         }
     }
 }

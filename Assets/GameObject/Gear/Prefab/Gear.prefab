@@ -129,6 +129,7 @@ MonoBehaviour:
   gearDurability: 100
   beforeGear: {fileID: 0}
   startGear: 0
+  gearList: []
 --- !u!50 &-2425575025864824096
 Rigidbody2D:
   serializedVersion: 4

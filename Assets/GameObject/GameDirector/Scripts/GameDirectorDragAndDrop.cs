@@ -78,6 +78,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                                                                0);
 
                 dragAndDropObject = Instantiate(gearPrefab, mousePos, Quaternion.identity);
+                dragAndDropObject.GetComponent<CircleCollider2D>().enabled = false;
 
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
@@ -118,6 +119,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         }
         else
         {
+            dragAndDropObject.GetComponent<CircleCollider2D>().enabled = true;
             dragAndDrop = DragAndDrop.OBJECT_DROP;
         }
     }
@@ -126,6 +128,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     //オブジェクを置く
     void Drop()
     {
+
         dragAndDrop = DragAndDrop.OBJECT_GET;
     }
 
