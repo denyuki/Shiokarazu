@@ -14,6 +14,16 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
     Vector3 startPosition;
 
+    ////////////////////////////////////////////////////////////
+    
+    //ここから巣原が記述
+
+    //GearDirector.gearNumListにギアを追加するための変数
+    GearDirector gearDirector;
+
+    //ここまで巣原が記述
+
+    ////////////////////////////////////////////////////////////
 
     enum DragAndDrop
     {
@@ -26,7 +36,13 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ////////////////////////////////////////////////////////////
         
+        //ここから巣原が記述
+        this.gearDirector = GetComponent<GearDirector>();
+        //ここまで巣原が記述
+
+        ////////////////////////////////////////////////////////////
     }
 
     // Update is called once per frame
@@ -79,6 +95,17 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
                 dragAndDropObject = Instantiate(gearPrefab, mousePos, Quaternion.identity);
                 dragAndDropObject.GetComponent<CircleCollider2D>().enabled = false;
+
+                ////////////////////////////////////////////////////////////
+                
+                //ここから巣原が記述
+
+                //ギアを管理するオブジェクトに追加する
+                gearDirector.gearNumList.Add(dragAndDropObject);
+
+                //ここまで巣原が記述
+
+                ////////////////////////////////////////////////////////////
 
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
