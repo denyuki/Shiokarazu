@@ -7,6 +7,8 @@ public class GearTouch : MonoBehaviour
     //半径取得用
     SpriteRenderer spriteRenderer;
 
+    public bool DragAndDrop = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,16 +23,20 @@ public class GearTouch : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D collision)
     {
-        Vector3 nearGearPosition = collision.transform.position;
-        Vector3 gearPosition = transform.position;
+        if (!DragAndDrop)
+        {
+            Vector3 nearGearPosition = collision.transform.position;
+            Vector3 gearPosition = transform.position;
 
-        Vector3 gearVector = gearPosition - nearGearPosition;
+            Vector3 gearVector = gearPosition - nearGearPosition;
 
-        SpriteRenderer spriteRendererOther = collision.gameObject.GetComponent<SpriteRenderer>();
+            SpriteRenderer spriteRendererOther = collision.gameObject.GetComponent<SpriteRenderer>();
 
-        float sum = (this.spriteRenderer.bounds.size.x + spriteRendererOther.bounds.size.x)/2;
+            float sum = (this.spriteRenderer.bounds.size.x + spriteRendererOther.bounds.size.x) / 2;
 
-        //ギアの位置を移動する
-        transform.position = collision.transform.position + gearVector.normalized * sum;
+            //ギアの位置を移動する
+            transform.position = collision.transform.position + gearVector.normalized * sum;
+        }
+        
     }
 }
