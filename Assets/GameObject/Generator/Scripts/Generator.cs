@@ -5,7 +5,8 @@ using UnityEngine;
 public class Generator : MonoBehaviour
 {
 
-    GearState gear = null;
+    GearState gearState = null;
+    GearTouch gearTouch = null;
 
     // Start is called before the first frame update
     void Start()
@@ -21,10 +22,10 @@ public class Generator : MonoBehaviour
 
     public bool GearConnect()
     {
-        if (gear != null && gear.gearList.Count > 0)
+        if (gearState != null && !gearTouch.DragAndDrop)
         {
 
-            return ConnectChase(gear);
+            return ConnectChase(gearState);
         }else
         {
             return false;
@@ -62,11 +63,23 @@ public class Generator : MonoBehaviour
     }
 
 
-    private void OnTriggerStay2D(Collider2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == Common.Gear)
         {
-            gear = collision.gameObject.GetComponent<GearState>();
+            gearState = collision.gameObject.GetComponent<GearState>();
+            gearTouch = collision.gameObject.GetComponent<GearTouch>();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == Common.Gear)
+        {
+            gearState = null;
+            gearTouch = null;
+            
         }
     }
 }

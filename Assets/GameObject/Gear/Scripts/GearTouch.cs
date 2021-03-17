@@ -36,6 +36,8 @@ public class GearTouch : MonoBehaviour
 
             //ギアの位置を移動する
             transform.position = collision.transform.position + gearVector.normalized * sum;
+
+            DragAndDrop = true;
         }
         
     }
