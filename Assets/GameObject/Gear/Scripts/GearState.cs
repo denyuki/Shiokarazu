@@ -28,7 +28,6 @@ public class GearState : MonoBehaviour
 
     //つながっているギアの情報を保持しておく変数
     public GameObject beforeGear;
-    bool beforeGearCheck = true;
 
     //始めのギアはgearDistanceを更新しないようにするための変数
     [SerializeField]
@@ -81,6 +80,7 @@ public class GearState : MonoBehaviour
         }
     }
 
+    //このギアにかかっている力を返す関数
     public float ReturnGearReceivePower()
     {
         return this.gearReceivePower;
@@ -138,14 +138,6 @@ public class GearState : MonoBehaviour
                 }
 
                 Debug.Log(this.gearDistance);
-                /*
-                            if (this.beforeGearCheck == true)
-                            {
-                                this.beforeGear = collision.gameObject;
-                                this.beforeGearCheck = false;
-                            }
-
-                */
             } 
         }
         
