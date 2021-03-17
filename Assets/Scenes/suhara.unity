@@ -261,6 +261,7 @@ MonoBehaviour:
   camera: {fileID: 1043846711}
   gearPrefab: {fileID: 8070719325715069378, guid: 72cbe589b1fee6046bd92bc5f334ab81,
     type: 3}
+  ItemPrefab: {fileID: 0}
 --- !u!4 &1022155312
 Transform:
   m_ObjectHideFlags: 0

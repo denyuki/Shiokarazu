@@ -10,6 +10,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
     [SerializeField] GameObject gearPrefab;
 
+    [SerializeField] GameObject ItemPrefab;
+
     Vector3 startPosition;
 
 
@@ -66,7 +68,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
-            //ギアジェネレーターだったらギアを生成
+            //ギア工場だったらギアを生成
             else if(hit2d && hit2d.collider.gameObject.tag == Common.GearFactory)
             {
 
@@ -76,6 +78,18 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                                                                0);
 
                 dragAndDropObject = Instantiate(gearPrefab, mousePos, Quaternion.identity);
+
+                dragAndDrop = DragAndDrop.OBJECT_DRAG;
+            }
+            //アイテム工場だったらアイテムを生成
+            else if(hit2d && hit2d.collider.gameObject.tag == Common.ItemFactory)
+            {
+
+                Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
+                                               camera.ScreenToWorldPoint(Input.mousePosition).y,
+                                               0);
+
+                dragAndDropObject = Instantiate(ItemPrefab, mousePos, Quaternion.identity);
 
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }

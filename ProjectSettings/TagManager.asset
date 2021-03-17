@@ -8,6 +8,7 @@ TagManager:
   - StartGenerator
   - GearGenerate
   - GearFactory
+  - ItemFactory
   layers:
   - Default
   - TransparentFX
