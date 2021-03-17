@@ -105,12 +105,12 @@ public class GearState : MonoBehaviour
     void OnTriggerStay2D(Collider2D collision)
     {
         //つながっている歯車の情報を持つ
-        if(collision.gameObject.tag == "Gear")
+        if(collision.gameObject.tag == Common.Gear)
         {
             bool addList = true;
             for(int i = 0; i < gearList.Count; ++i)
             {
-                Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
+                //Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
                 if(gearList[i].gameObject == collision.gameObject)
                 {
                     addList = false;
@@ -126,11 +126,11 @@ public class GearState : MonoBehaviour
                 {
                     int min = 100;
 
-                    for (int i = 0; i < gearList.Count; ++i)
+                    for (int j = 0; j < gearList.Count; ++j)
                     {
-                        if (gearList[i].getGearDistance < min)
+                        if (gearList[j].getGearDistance < min)
                         {
-                            min = gearList[i].getGearDistance;
+                            min = gearList[j].getGearDistance;
                         }
                     }
 

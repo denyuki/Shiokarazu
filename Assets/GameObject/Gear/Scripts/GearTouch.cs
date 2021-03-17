@@ -30,8 +30,6 @@ public class GearTouch : MonoBehaviour
 
         float sum = (this.spriteRenderer.bounds.size.x + spriteRendererOther.bounds.size.x)/2;
 
-        Debug.Log(this.spriteRenderer.bounds.size.x);
-
         //ギアの位置を移動する
         transform.position = collision.transform.position + gearVector.normalized * sum;
     }
