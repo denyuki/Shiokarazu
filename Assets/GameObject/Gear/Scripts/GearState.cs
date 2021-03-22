@@ -37,6 +37,13 @@ public class GearState : MonoBehaviour
     public List<GearState> gearList = new List<GearState>();
     int gearDistance = 0;
 
+    //力を渡すギアを保存しておく変数
+    public List<GearState> receivePowerList = new List<GearState>();
+
+    //渡す力の量を計算するようの変数
+    List<int> percentOfReceivePower = new List<int>();
+    int totalPower = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -99,6 +106,48 @@ public class GearState : MonoBehaviour
         {
             this.gearDurability -= this.gearReceivePower - this.gearPower;
             this.gearDamegeTimer = 2;
+        }
+    }
+
+    //渡す力の量を計算する関数
+    //floatのほうがいいかも
+    int MathReceivePower(int gearNum,int percent)
+    {
+        return (this.gearPower / gearNum) * percent;
+    }
+
+    //次のギアに力を与える関数
+    public void SearchAndReceiveGearPower()
+    {
+        int maxDistance = -1;
+
+        for (int i = 0; i < this.gearList.Count; ++i)
+        {
+            if(this.gearList[i].gearDistance > maxDistance)
+            {
+                this.receivePowerList.Clear();
+
+                this.receivePowerList.Add(this.gearList[i]);
+                maxDistance = this.gearList[i].gearDistance;
+            }else if(this.gearList[i].gearDistance == maxDistance)
+            {
+                this.receivePowerList.Add(this.gearList[i]);
+            }
+        }
+
+        for(int i = 0; i < this.receivePowerList.Count; ++i)
+        {
+            this.totalPower += this.receivePowerList[i].gearPower;
+        }
+
+        for(int i = 0;i < this.receivePowerList.Count; ++i)
+        {
+            this.percentOfReceivePower.Add(MathReceivePower(this.totalPower, this.receivePowerList[i].gearPower));
+        }
+
+        for(int i = 0;i < this.receivePowerList.Count; ++i)
+        {
+            this.receivePowerList[i].GearReceivePower(this.percentOfReceivePower[i]);
         }
     }
 
