@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8070719325715069372}
   - component: {fileID: -2425575025864824096}
   m_Layer: 0
-  m_Name: Gear (1)
+  m_Name: Gear
   m_TagString: Gear
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,6 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba80abece5dc0f43be7dc61e0bb4d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DragAndDrop: 0
 --- !u!114 &8070719325715069372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,11 +126,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ff6071293e65f4bbd7e44ba1840932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gearPower: 0
+  gearPower: 1
   gearDurability: 100
   beforeGear: {fileID: 0}
   startGear: 0
   gearList: []
+  receivePowerList: []
 --- !u!50 &-2425575025864824096
 Rigidbody2D:
   serializedVersion: 4
