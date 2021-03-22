@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
+    //クリアに必要な力
+    [SerializeField] int clearPower = 0;
+    //現在の力
+    int nowPower = 0;
 
+    //触れているギアの情報
     GearState gearState = null;
     GearTouch gearTouch = null;
 
@@ -20,6 +25,8 @@ public class Generator : MonoBehaviour
         
     }
 
+
+    //ギアとつながっているか
     public bool GearConnect()
     {
         if (gearState != null && !gearTouch.DragAndDrop)
@@ -32,23 +39,17 @@ public class Generator : MonoBehaviour
         }
     }
 
-
+    //ギアが繋がっていてクリアしているか（再起関数）
     bool ConnectChase(GearState gear)
     {
 
         int geraDistance = gear.getGearDistance;
-        Debug.Log(geraDistance);
-
-        if(geraDistance == 0)
-        {
-
-            return true;
-        }
-
 
         int distance = gear.gearList[0].getGearDistance;
         int count = 0;
 
+
+        //ジェネレーターに近いギアを探す
         for (int i = 1; i < gear.gearList.Count; i++)
         {
             if(distance > gear.gearList[i].getGearDistance)
@@ -58,7 +59,26 @@ public class Generator : MonoBehaviour
             }
         }
 
+        nowPower += gear.gearList[count].gearPower;
+        Debug.Log("nowPower"+ nowPower);
 
+        //ジェネレーターとつながっているか
+        if (geraDistance == 0)
+        {
+            if (clearPower == nowPower)
+            {
+                //クリア
+                return true;
+            }
+            else
+            {
+                //クリアしていない
+                nowPower = 0;
+                return false;  
+            }
+        }
+
+       
         return ConnectChase(gear.gearList[count]);
     }
 

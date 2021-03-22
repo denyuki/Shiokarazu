@@ -13,8 +13,8 @@ public class GearState : MonoBehaviour
     State state = State.single;
 
     //ギアの力の大きさ
-    [SerializeField]
-    int gearPower;
+    
+    public int gearPower;
 
     //ギアの耐久度
     [SerializeField]

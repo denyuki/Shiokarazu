@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 274183383}
   - component: {fileID: 274183386}
   m_Layer: 0
-  m_Name: New Sprite
+  m_Name: Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -242,6 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25d712040abe0549a73873df73bc1fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clearPower: 2
 --- !u!1 &342124037
 GameObject:
   m_ObjectHideFlags: 0
@@ -552,6 +553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25d712040abe0549a73873df73bc1fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clearPower: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +698,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070719325715069372, guid: 72cbe589b1fee6046bd92bc5f334ab81,
+        type: 3}
+      propertyPath: gearPower
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8070719325715069372, guid: 72cbe589b1fee6046bd92bc5f334ab81,
         type: 3}

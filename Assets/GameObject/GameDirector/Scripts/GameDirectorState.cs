@@ -18,7 +18,7 @@ public class GameDirectorState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //クリアしているか
         if (generator.GearConnect())
         {
             Debug.Log("クリア");
