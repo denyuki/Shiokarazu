@@ -10,6 +10,7 @@ public class GearDirector : MonoBehaviour
 
     //ステージのギアに力を分配するためのリスト
     public List<GameObject> gearNumList = new List<GameObject>();
+    public List<GearState> PowerReceiveList = new List<GearState>();
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +28,16 @@ public class GearDirector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //力を分配するための処理
+        for(int i = 0;i < this.gearNumList.Count; ++i)
+        {
+            this.PowerReceiveList.Add(this.gearNumList[i].GetComponent<GearState>());
+        }
+
+        for(int i = 0; i < this.PowerReceiveList.Count; ++i)
+        {
+            this.PowerReceiveList[i].SearchAndReceiveGearPower();
+        }
     }
 }
 
