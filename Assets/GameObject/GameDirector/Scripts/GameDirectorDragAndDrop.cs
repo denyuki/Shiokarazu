@@ -14,6 +14,13 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
     Vector3 startPosition;
 
+    enum MousState {
+        NORMAL,
+        GEAR,
+        OIL,
+    }
+    MousState mousState = MousState.NORMAL;
+
     ////////////////////////////////////////////////////////////
     
     //ここから巣原が記述
@@ -62,6 +69,16 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 Drop();
                 break;
         }
+
+        switch (mousState)
+        {
+            case MousState.NORMAL:
+                break;
+            case MousState.OIL:
+                GetComponent<Oil>().OilUpdate();
+                break;
+
+        }
     }
 
 
@@ -87,6 +104,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
             //ギア工場だったらギアを生成
             else if(hit2d && hit2d.collider.gameObject.tag == Common.GearFactory)
             {
+                GetComponent<Oil>().CursorChangeNormal();
 
                 Debug.Log("factory");
                 Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
@@ -107,19 +125,14 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
                 ////////////////////////////////////////////////////////////
 
+                mousState = MousState.NORMAL;
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
-            //アイテム工場だったらアイテムを生成
+            //アイテム工場だったらアイテムを使えるようになる
             else if(hit2d && hit2d.collider.gameObject.tag == Common.ItemFactory)
             {
-
-                Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
-                                               camera.ScreenToWorldPoint(Input.mousePosition).y,
-                                               0);
-
-                dragAndDropObject = Instantiate(ItemPrefab, mousePos, Quaternion.identity);
-
-                dragAndDrop = DragAndDrop.OBJECT_DRAG;
+                GetComponent<Oil>().CursorChange();  //カーソル変更
+                mousState = MousState.OIL;
             }
         }
     }
