@@ -57,7 +57,7 @@ public class Oil : MonoBehaviour
         {
             case OilState.NOEMAL:
                 Nomal();
-                Sound();
+                //Sound();
                 break;
             case OilState.PUSH:
                 Push();
@@ -102,6 +102,7 @@ public class Oil : MonoBehaviour
 
     void Sound()
     {
+        /*
         time -= Time.deltaTime;
         if (time < 0)
         {
@@ -144,12 +145,12 @@ public class Oil : MonoBehaviour
                 audioSource.Play();
                 sound = false;
             }
-            */
 
 
             pastMousePos = nowMousePos;
             pastVector = nowVector;
         }
+      */
 
         
     }

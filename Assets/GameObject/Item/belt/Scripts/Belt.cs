@@ -117,8 +117,6 @@ public class Belt : MonoBehaviour
 
 
 
-
-
         switch (beltState)
         { 
             case BeltState.PREPARATION:
@@ -129,8 +127,7 @@ public class Belt : MonoBehaviour
                 Spin();
             break;
         }
-        
-
+       
 
     }
 
