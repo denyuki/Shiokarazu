@@ -45,6 +45,9 @@ public class UIManager : MonoBehaviour
     Text timerText;
     float timeLimit = 100f;
 
+    [SerializeField]
+    GameObject startText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,6 +56,10 @@ public class UIManager : MonoBehaviour
 
         this.leftEndPosition = this.stageLeftEnd.transform.position.x + this.leftEndPosition;
         this.rightEndPosition = this.stageRightEnd.transform.position.x + this.rightEndPosition;
+
+        //スタートのテキストをオンにする
+        this.startText.SetActive(true);
+        Invoke("StartTextOff", 2f);
     }
 
     // Update is called once per frame
@@ -97,5 +104,10 @@ public class UIManager : MonoBehaviour
         Vector3 cameraPosition = new Vector3(this.leftEndPosition+ this.rightEndPosition * this.cameraScrollbar.value, this.camera.transform.position.y, this.camera.transform.position.z);
 
         this.camera.transform.position = cameraPosition;
+    }
+
+    void StartTextOff()
+    {
+        this.startText.SetActive(false);
     }
 }

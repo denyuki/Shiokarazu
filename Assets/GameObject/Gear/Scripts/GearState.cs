@@ -259,8 +259,8 @@ public class GearState : MonoBehaviour
         Transform currentOnSwitchTransform;
 
         currentOnSwitchTransform = transform.Find(Common.SimpleLightningBoltPrefab);
-        rightEndTransform = currentOnSwitchTransform.Find(Common.LightningStart);
-        leftEndTransform = currentOnSwitchTransform.Find(Common.LightningEnd);
+        leftEndTransform = currentOnSwitchTransform.Find(Common.LightningStart);
+        rightEndTransform = currentOnSwitchTransform.Find(Common.LightningEnd);
         
         if(rightEndTransform == null)
         {
@@ -303,5 +303,33 @@ public class GearState : MonoBehaviour
 
         //電流をオンにする
         currentOnSwitch.SetActive(true);
+    }
+
+    public void CurrentStartPosition()
+    {
+        GameObject leftEnd;
+        Transform leftEndTransform;
+        Transform currentOnSwitchTransform;
+
+        currentOnSwitchTransform = transform.Find(Common.SimpleLightningBoltPrefab);
+        leftEndTransform = currentOnSwitchTransform.Find(Common.LightningStart);
+
+        leftEnd = leftEndTransform.gameObject;
+
+        leftEnd.transform.localPosition = new Vector3(-0.5f, 0f, 0f);
+    }
+
+    public void CurrentEndPosition()
+    {
+        GameObject rightEnd;
+        Transform rightEndTransform;
+        Transform currentOnSwitchTransform;
+
+        currentOnSwitchTransform = transform.Find(Common.SimpleLightningBoltPrefab);
+        rightEndTransform = currentOnSwitchTransform.Find(Common.LightningEnd);
+
+        rightEnd = rightEndTransform.gameObject;
+
+        rightEnd.transform.localPosition = new Vector3(0.5f, 0f, 0f);
     }
 }

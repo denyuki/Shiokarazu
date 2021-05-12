@@ -21,6 +21,10 @@ public class GearDirector : MonoBehaviour
     [SerializeField]
     string nextScene;
 
+    //一番ゴールに近いギアの電流の位置を変更するための変数
+    int maxGearDistance = 0;
+    GearState maxGear;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,7 +81,16 @@ public class GearDirector : MonoBehaviour
         {
             Debug.Log(this.PowerReceiveList[i].name);
             this.PowerReceiveList[i].currentPosition();
+
+            if (this.PowerReceiveList[i].getGearDistance > this.maxGearDistance)
+            {
+                this.maxGearDistance = this.PowerReceiveList[i].getGearDistance;
+                this.maxGear = this.PowerReceiveList[i];
+            }
         }
+
+        this.PowerReceiveList[0].CurrentStartPosition();
+        this.maxGear.CurrentEndPosition();
     }
 }
 
