@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GearState : MonoBehaviour
 {
@@ -244,5 +245,63 @@ public class GearState : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    //電流のポジションを変更する関数
+    public void currentPosition()
+    {
+        GameObject rightEnd;
+        GameObject leftEnd;
+        GameObject currentOnSwitch;
+
+        Transform rightEndTransform;
+        Transform leftEndTransform;
+        Transform currentOnSwitchTransform;
+
+        currentOnSwitchTransform = transform.Find(Common.SimpleLightningBoltPrefab);
+        rightEndTransform = currentOnSwitchTransform.Find(Common.LightningStart);
+        leftEndTransform = currentOnSwitchTransform.Find(Common.LightningEnd);
+        
+        if(rightEndTransform == null)
+        {
+            Debug.LogError("右が見つかってないよ" + gameObject.name);
+        }
+        
+
+        rightEnd = rightEndTransform.gameObject;
+        leftEnd = leftEndTransform.gameObject;
+        currentOnSwitch = currentOnSwitchTransform.gameObject;
+
+        Vector3 rightCurrentPosition = new Vector3(0f,0f,0f);
+        Vector3 leftCurrentPosition = new Vector3(0f,0f,0f);
+
+        int min = 100;
+        int max = 0;
+
+        //つながっている歯車の位置を取得する(前後）
+        for(int i = 0; i < gearList.Count; ++i)
+        {
+            if(this.gearList[i].getGearDistance < this.gearDistance)
+            {
+                if(this.gearList[i].getGearDistance < min)
+                {
+                    leftCurrentPosition = this.gearList[i].transform.position;
+                    min = this.gearList[i].getGearDistance;
+                }
+            }else if(this.gearList[i].getGearDistance > this.gearDistance)
+            {
+                if(this.gearList[i].gearDistance > max)
+                {
+                    rightCurrentPosition = this.gearList[i].transform.position;
+                    max = this.gearList[i].getGearDistance;
+                }
+            }
+        }
+
+        leftEnd.transform.position = leftCurrentPosition;
+        rightEnd.transform.position = rightCurrentPosition;
+
+        //電流をオンにする
+        currentOnSwitch.SetActive(true);
     }
 }
