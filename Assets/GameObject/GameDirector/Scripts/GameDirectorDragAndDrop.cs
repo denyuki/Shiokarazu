@@ -55,6 +55,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //ゲームの状態
         switch (dragAndDrop)
         {
             case DragAndDrop.OBJECT_GET:
@@ -70,6 +71,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 break;
         }
 
+        //マウスの状態
         switch (mousState)
         {
             case MousState.NORMAL:
@@ -100,17 +102,20 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 StartPosition();  //移動前のポジションを保存
 
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
+
             }
             //ギア工場だったらギアを生成
             else if(hit2d && hit2d.collider.gameObject.tag == Common.GearFactory)
             {
-                GetComponent<Oil>().CursorChangeNormal();
 
-                Debug.Log("factory");
+                GetComponent<Oil>().CursorChangeNormal();　//カーソル変更
+
+                //マウスの座標取得
                 Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
-                                                               camera.ScreenToWorldPoint(Input.mousePosition).y,
-                                                               0);
+                                               camera.ScreenToWorldPoint(Input.mousePosition).y,
+                                               0);
 
+                //プレハブ生成
                 dragAndDropObject = Instantiate(gearPrefab, mousePos, Quaternion.identity);
                 dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = true;
 
@@ -125,6 +130,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
                 ////////////////////////////////////////////////////////////
 
+
+                //状態変更
                 mousState = MousState.NORMAL;
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
@@ -169,6 +176,4 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = false;
         dragAndDrop = DragAndDrop.OBJECT_GET;
     }
-
-
 }
