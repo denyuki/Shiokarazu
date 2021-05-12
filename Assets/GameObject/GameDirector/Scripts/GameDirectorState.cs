@@ -7,12 +7,12 @@ public class GameDirectorState : MonoBehaviour
 
     [SerializeField] Generator generator;
 
+    GearDirector gearDirector;
 
     // Start is called before the first frame update
     void Start()
     {
-
-
+        this.gearDirector = GetComponent<GearDirector>();
     }
 
     // Update is called once per frame
@@ -22,6 +22,9 @@ public class GameDirectorState : MonoBehaviour
         if (generator.GearConnect())
         {
             Debug.Log("クリア");
+
+            //電流をオンにする
+            this.gearDirector.AllCurrentOn();
         }
 
     }
