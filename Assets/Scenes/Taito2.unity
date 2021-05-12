@@ -1750,6 +1750,7 @@ MonoBehaviour:
   stageRightEnd: {fileID: 950354810}
   scrollbar: {fileID: 1270993180}
   Timer: {fileID: 623848103}
+  startText: {fileID: 625274038}
 --- !u!1 &1442987848
 GameObject:
   m_ObjectHideFlags: 0
