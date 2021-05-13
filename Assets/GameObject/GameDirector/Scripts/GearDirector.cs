@@ -61,11 +61,12 @@ public class GearDirector : MonoBehaviour
             
         }
         
-
+        
         for (int i = 0; i < this.PowerReceiveList.Count; ++i)
         {
             this.PowerReceiveList[i].SearchAndReceiveGearPower();
         }
+        
     }
 
     //シーン遷移用の関数
