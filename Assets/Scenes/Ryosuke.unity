@@ -3014,8 +3014,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3345,7 +3345,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1294971976
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4386,7 +4386,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1878352014
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4775,6 +4775,14 @@ MonoBehaviour:
     type: 3}
   ItemPrefab: {fileID: 2459911331992415565, guid: baff85aafdd3aa34081dd169a770885d,
     type: 3}
+  UIManager: {fileID: 0}
+  itemLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  gearLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  debugObject: {fileID: 0}
 --- !u!4 &2118607889
 Transform:
   m_ObjectHideFlags: 0
@@ -4817,6 +4825,8 @@ MonoBehaviour:
   gears: []
   gearNumList: []
   PowerReceiveList: []
+  alreadyAddObject: []
+  nextScene: 
 --- !u!114 &2118607892
 MonoBehaviour:
   m_ObjectHideFlags: 0
