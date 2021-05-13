@@ -41,6 +41,11 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
     public GameObject debugObject;
 
+
+    Oil oil;
+
+    bool oilCheck = false;
+
     //ここまで巣原が記述
 
     ////////////////////////////////////////////////////////////
@@ -56,6 +61,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        oil = GetComponent<Oil>();
         ////////////////////////////////////////////////////////////
         
         //ここから巣原が記述
@@ -83,6 +90,11 @@ public class GameDirectorDragAndDrop : MonoBehaviour
             case DragAndDrop.OBJECT_DROP:
                 Drop();
                 break;
+        }
+
+        if (oilCheck)
+        {
+            oil.OilUpdate();
         }
     }
 
@@ -149,16 +161,9 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
             //アイテム工場だったらアイテムを生成
-            else if(hit2d && hit2d.collider.gameObject.tag == Common.ItemFactory)
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.ItemFactory)
             {
-
-                Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
-                                               camera.ScreenToWorldPoint(Input.mousePosition).y,
-                                               0);
-
-                dragAndDropObject = Instantiate(ItemPrefab, mousePos, Quaternion.identity);
-
-                dragAndDrop = DragAndDrop.OBJECT_DRAG;
+                oilCheck = true;
             }
             ////////////////////////////////////////////////////////////
 
@@ -196,9 +201,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         }
         else
         {
-            dragAndDrop = DragAndDrop.OBJECT_DROP;
-
-            
+            dragAndDrop = DragAndDrop.OBJECT_DROP;  
         }
     }
 
@@ -236,6 +239,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         //ここまで巣原が記述
 
         ////////////////////////////////////////////////////////////
+        ///
+
     }
 
     //アイテムボックスを有効にする関数
