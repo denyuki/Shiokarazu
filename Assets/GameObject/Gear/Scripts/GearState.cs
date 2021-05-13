@@ -16,14 +16,8 @@ public class GearState : MonoBehaviour
     //ギアの力の大きさ    
     public int gearPower;
 
-    //ギアの耐久度
-    [SerializeField]
-    float gearDurability = 100;
-
-    //ギアにダメージを与えるときに使うタイマー用の変数
-    float gearDamegeTimer = 0;
-
     //ギアが受けている力の大きさを保存する変数
+    //このギアまでの全てのギアの力の合計値が入る
     float gearReceivePower;
 
     //つながっているギアの情報を保持しておく変数
@@ -42,7 +36,11 @@ public class GearState : MonoBehaviour
 
     //渡す力の量を計算するようの変数
     List<int> percentOfReceivePower = new List<int>();
-    int totalPower = 0;
+    public int totalPower = 0;
+
+    //力を渡す専用の変数
+    [SerializeField]
+    float  receivePower = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +56,8 @@ public class GearState : MonoBehaviour
             case State.single: Single(); break;
             case State.adapt:  Adapt();  break;
         }
+
+        this.receivePower = this.gearReceivePower;
     }
 
     //歯車の状態がsingleの時呼ばれる関数
@@ -69,22 +69,15 @@ public class GearState : MonoBehaviour
     //歯車の状態がadaptの時呼ばれる関数
     public void Adapt()
     {
-        GearDamege();
+        
     }
 
     //歯車にかかっている力の大きさを受け取る関数
-    public void GearReceivePower(int power)
+    //自分より前のギア全ての合計値になる
+    public void GearReceivePower(float power)
     {
         //かかっている力を登録する
         this.gearReceivePower = power;
-
-        if(power > this.gearPower && this.gearDamegeTimer <= 0)
-        {
-            this.gearDamegeTimer = 2;
-        }else if(power <= this.gearPower)
-        {
-            this.gearDamegeTimer = 0;
-        }
     }
 
     //このギアにかかっている力を返す関数
@@ -93,28 +86,15 @@ public class GearState : MonoBehaviour
         return this.gearReceivePower;
     }
 
-    //ギアの耐久度を減らす関数
-    //引数はどれだけオーバーパワーがかかっているか
-    void GearDamege()
-    {
-        //タイマーを減らしていき、０になったらダメージを与える
-        if(this.gearDamegeTimer > 0)
-        {
-            this.gearDamegeTimer -= Time.deltaTime;
-        }
-        else if(this.gearDamegeTimer <= 0)
-        {
-            this.gearDurability -= this.gearReceivePower - this.gearPower;
-            this.gearDamegeTimer = 2;
-        }
-    }
-
+    //今は使ってない
     //渡す力の量を計算する関数
     //floatのほうがいいかも
+    /*
     int MathReceivePower(int gearNum,int percent)
     {
         return (this.gearPower / gearNum) * percent;
     }
+    */
 
     //次のギアに力を与える関数
     public void SearchAndReceiveGearPower()
@@ -135,6 +115,7 @@ public class GearState : MonoBehaviour
             }
         }
 
+        /*
         for(int i = 0; i < this.receivePowerList.Count; ++i)
         {
             this.totalPower += this.receivePowerList[i].gearPower;
@@ -144,10 +125,15 @@ public class GearState : MonoBehaviour
         {
             this.percentOfReceivePower.Add(MathReceivePower(this.totalPower, this.receivePowerList[i].gearPower));
         }
+        */
 
         for(int i = 0;i < this.receivePowerList.Count; ++i)
         {
-            this.receivePowerList[i].GearReceivePower(this.percentOfReceivePower[i]);
+            //this.receivePowerList[i].GearReceivePower(this.percentOfReceivePower[i]);
+            if(this.gearDistance < this.receivePowerList[i].getGearDistance)
+            {
+                this.receivePowerList[i].GearReceivePower(this.receivePower + this.gearPower);
+            }
         }
     }
 
@@ -192,6 +178,20 @@ public class GearState : MonoBehaviour
         
     }
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        GearState gearState;
+
+        if(!(collision.gameObject.tag == Common.Gear))
+        {
+            return;
+        }
+
+        gearState = collision.gameObject.GetComponent<GearState>();
+        
+        this.receivePower = gearState.ReturnGearReceivePower();
+    }
+
     void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Gear")
@@ -221,9 +221,6 @@ public class GearState : MonoBehaviour
             case State.adapt:
                 {
                     //stateを切り替えた際に後始末が必要ならばここに記述
-
-                    //ダメージタイマーを０にする
-                    this.gearDamegeTimer = 0;
                 }
                 break;
         }
