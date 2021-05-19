@@ -261,6 +261,7 @@ MonoBehaviour:
   camera: {fileID: 1043846711}
   gearPrefab: {fileID: 8070719325715069378, guid: 72cbe589b1fee6046bd92bc5f334ab81,
     type: 3}
+  ItemPrefab: {fileID: 0}
 --- !u!4 &1022155312
 Transform:
   m_ObjectHideFlags: 0
@@ -592,6 +593,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070719325715069369, guid: 72cbe589b1fee6046bd92bc5f334ab81,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070719325715069369, guid: 72cbe589b1fee6046bd92bc5f334ab81,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8070719325715069369, guid: 72cbe589b1fee6046bd92bc5f334ab81,
         type: 3}

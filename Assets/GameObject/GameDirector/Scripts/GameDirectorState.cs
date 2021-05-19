@@ -7,23 +7,25 @@ public class GameDirectorState : MonoBehaviour
 
     [SerializeField] Generator generator;
 
-    List<GameObject> myList = new List<GameObject>();
+    GearDirector gearDirector;
 
     // Start is called before the first frame update
     void Start()
     {
-        myList.Add(gameObject);
-        Debug.Log(myList[0].name);
+        this.gearDirector = GetComponent<GearDirector>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        //クリアしているか
+        if (generator.GearConnect())
+        {
+            Debug.Log("クリア");
 
-        //if (generator.GearConnect())
-       // {
-            //Debug.Log("クリア");
-       // }
+            //電流をオンにする
+            this.gearDirector.AllCurrentOn();
+        }
 
     }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GearState : MonoBehaviour
 {
@@ -12,31 +13,34 @@ public class GearState : MonoBehaviour
     }
     State state = State.single;
 
-    //ギアの力の大きさ
-    [SerializeField]
-    int gearPower;
-
-    //ギアの耐久度
-    [SerializeField]
-    float gearDurability = 100;
-
-    //ギアにダメージを与えるときに使うタイマー用の変数
-    float gearDamegeTimer = 0;
+    //ギアの力の大きさ    
+    public int gearPower;
 
     //ギアが受けている力の大きさを保存する変数
+    //このギアまでの全てのギアの力の合計値が入る
     float gearReceivePower;
 
     //つながっているギアの情報を保持しておく変数
     public GameObject beforeGear;
-    bool beforeGearCheck = true;
 
     //始めのギアはgearDistanceを更新しないようにするための変数
     [SerializeField]
     bool startGear = false;
 
     //触れているギアの情報を保持しておく変数
-    List<GearState> gearList = new List<GearState>();
+    public List<GearState> gearList = new List<GearState>();
     int gearDistance = 0;
+
+    //力を渡すギアを保存しておく変数
+    public List<GearState> receivePowerList = new List<GearState>();
+
+    //渡す力の量を計算するようの変数
+    List<int> percentOfReceivePower = new List<int>();
+    public int totalPower = 0;
+
+    //力を渡す専用の変数
+    [SerializeField]
+    float  receivePower = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +56,8 @@ public class GearState : MonoBehaviour
             case State.single: Single(); break;
             case State.adapt:  Adapt();  break;
         }
+
+        this.receivePower = this.gearReceivePower;
     }
 
     //歯車の状態がsingleの時呼ばれる関数
@@ -63,54 +69,83 @@ public class GearState : MonoBehaviour
     //歯車の状態がadaptの時呼ばれる関数
     public void Adapt()
     {
-        GearDamege();
+        
     }
 
     //歯車にかかっている力の大きさを受け取る関数
-    public void GearReceivePower(int power)
+    //自分より前のギア全ての合計値になる
+    public void GearReceivePower(float power)
     {
         //かかっている力を登録する
         this.gearReceivePower = power;
-
-        if(power > this.gearPower && this.gearDamegeTimer <= 0)
-        {
-            this.gearDamegeTimer = 2;
-        }else if(power <= this.gearPower)
-        {
-            this.gearDamegeTimer = 0;
-        }
     }
 
+    //このギアにかかっている力を返す関数
     public float ReturnGearReceivePower()
     {
         return this.gearReceivePower;
     }
 
-    //ギアの耐久度を減らす関数
-    //引数はどれだけオーバーパワーがかかっているか
-    void GearDamege()
+    //今は使ってない
+    //渡す力の量を計算する関数
+    //floatのほうがいいかも
+    /*
+    int MathReceivePower(int gearNum,int percent)
     {
-        //タイマーを減らしていき、０になったらダメージを与える
-        if(this.gearDamegeTimer > 0)
+        return (this.gearPower / gearNum) * percent;
+    }
+    */
+
+    //次のギアに力を与える関数
+    public void SearchAndReceiveGearPower()
+    {
+        int maxDistance = -1;
+
+        for (int i = 0; i < this.gearList.Count; ++i)
         {
-            this.gearDamegeTimer -= Time.deltaTime;
+            if(this.gearList[i].gearDistance > maxDistance)
+            {
+                this.receivePowerList.Clear();
+
+                this.receivePowerList.Add(this.gearList[i]);
+                maxDistance = this.gearList[i].gearDistance;
+            }else if(this.gearList[i].gearDistance == maxDistance)
+            {
+                this.receivePowerList.Add(this.gearList[i]);
+            }
         }
-        else if(this.gearDamegeTimer <= 0)
+
+        /*
+        for(int i = 0; i < this.receivePowerList.Count; ++i)
         {
-            this.gearDurability -= this.gearReceivePower - this.gearPower;
-            this.gearDamegeTimer = 2;
+            this.totalPower += this.receivePowerList[i].gearPower;
+        }
+
+        for(int i = 0;i < this.receivePowerList.Count; ++i)
+        {
+            this.percentOfReceivePower.Add(MathReceivePower(this.totalPower, this.receivePowerList[i].gearPower));
+        }
+        */
+
+        for(int i = 0;i < this.receivePowerList.Count; ++i)
+        {
+            //this.receivePowerList[i].GearReceivePower(this.percentOfReceivePower[i]);
+            if(this.gearDistance < this.receivePowerList[i].getGearDistance)
+            {
+                this.receivePowerList[i].GearReceivePower(this.receivePower + this.gearPower);
+            }
         }
     }
 
     void OnTriggerStay2D(Collider2D collision)
     {
         //つながっている歯車の情報を持つ
-        if(collision.gameObject.tag == "Gear")
+        if(collision.gameObject.tag == Common.Gear)
         {
             bool addList = true;
             for(int i = 0; i < gearList.Count; ++i)
             {
-                Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
+                //Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
                 if(gearList[i].gameObject == collision.gameObject)
                 {
                     addList = false;
@@ -126,11 +161,11 @@ public class GearState : MonoBehaviour
                 {
                     int min = 100;
 
-                    for (int i = 0; i < gearList.Count; ++i)
+                    for (int j = 0; j < gearList.Count; ++j)
                     {
-                        if (gearList[i].getGearDistance < min)
+                        if (gearList[j].getGearDistance < min)
                         {
-                            min = gearList[i].getGearDistance;
+                            min = gearList[j].getGearDistance;
                         }
                     }
 
@@ -138,17 +173,23 @@ public class GearState : MonoBehaviour
                 }
 
                 Debug.Log(this.gearDistance);
-                /*
-                            if (this.beforeGearCheck == true)
-                            {
-                                this.beforeGear = collision.gameObject;
-                                this.beforeGearCheck = false;
-                            }
-
-                */
             } 
         }
         
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        GearState gearState;
+
+        if(!(collision.gameObject.tag == Common.Gear))
+        {
+            return;
+        }
+
+        gearState = collision.gameObject.GetComponent<GearState>();
+        
+        this.receivePower = gearState.ReturnGearReceivePower();
     }
 
     void OnTriggerExit2D(Collider2D collision)
@@ -180,9 +221,6 @@ public class GearState : MonoBehaviour
             case State.adapt:
                 {
                     //stateを切り替えた際に後始末が必要ならばここに記述
-
-                    //ダメージタイマーを０にする
-                    this.gearDamegeTimer = 0;
                 }
                 break;
         }
@@ -204,5 +242,91 @@ public class GearState : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    //電流のポジションを変更する関数
+    public void currentPosition()
+    {
+        GameObject rightEnd;
+        GameObject leftEnd;
+        GameObject currentOnSwitch;
+
+        Transform rightEndTransform;
+        Transform leftEndTransform;
+        Transform currentOnSwitchTransform;
+
+        currentOnSwitchTransform = transform.Find(Common.SimpleLightningBoltPrefab);
+        leftEndTransform = currentOnSwitchTransform.Find(Common.LightningStart);
+        rightEndTransform = currentOnSwitchTransform.Find(Common.LightningEnd);
+        
+        if(rightEndTransform == null)
+        {
+            Debug.LogError("右が見つかってないよ" + gameObject.name);
+        }
+        
+
+        rightEnd = rightEndTransform.gameObject;
+        leftEnd = leftEndTransform.gameObject;
+        currentOnSwitch = currentOnSwitchTransform.gameObject;
+
+        Vector3 rightCurrentPosition = new Vector3(0f,0f,0f);
+        Vector3 leftCurrentPosition = new Vector3(0f,0f,0f);
+
+        int min = 100;
+        int max = 0;
+
+        //つながっている歯車の位置を取得する(前後）
+        for(int i = 0; i < gearList.Count; ++i)
+        {
+            if(this.gearList[i].getGearDistance < this.gearDistance)
+            {
+                if(this.gearList[i].getGearDistance < min)
+                {
+                    leftCurrentPosition = this.gearList[i].transform.position;
+                    min = this.gearList[i].getGearDistance;
+                }
+            }else if(this.gearList[i].getGearDistance > this.gearDistance)
+            {
+                if(this.gearList[i].gearDistance > max)
+                {
+                    rightCurrentPosition = this.gearList[i].transform.position;
+                    max = this.gearList[i].getGearDistance;
+                }
+            }
+        }
+
+        leftEnd.transform.position = leftCurrentPosition;
+        rightEnd.transform.position = rightCurrentPosition;
+
+        //電流をオンにする
+        currentOnSwitch.SetActive(true);
+    }
+
+    public void CurrentStartPosition()
+    {
+        GameObject leftEnd;
+        Transform leftEndTransform;
+        Transform currentOnSwitchTransform;
+
+        currentOnSwitchTransform = transform.Find(Common.SimpleLightningBoltPrefab);
+        leftEndTransform = currentOnSwitchTransform.Find(Common.LightningStart);
+
+        leftEnd = leftEndTransform.gameObject;
+
+        leftEnd.transform.localPosition = new Vector3(-0.5f, 0f, 0f);
+    }
+
+    public void CurrentEndPosition()
+    {
+        GameObject rightEnd;
+        Transform rightEndTransform;
+        Transform currentOnSwitchTransform;
+
+        currentOnSwitchTransform = transform.Find(Common.SimpleLightningBoltPrefab);
+        rightEndTransform = currentOnSwitchTransform.Find(Common.LightningEnd);
+
+        rightEnd = rightEndTransform.gameObject;
+
+        rightEnd.transform.localPosition = new Vector3(0.5f, 0f, 0f);
     }
 }
