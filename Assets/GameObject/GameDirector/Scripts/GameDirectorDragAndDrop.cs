@@ -9,15 +9,33 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
     GameObject dragAndDropObject;
 
-    [SerializeField] GameObject gearPrefab;
+    //力１のギア
+    [SerializeField] GameObject gearPrefabOne;
+
+    //力２のギア
+    [SerializeField] GameObject gearPrefabTwo;
+
+    //力３のギア
+    [SerializeField] GameObject gearPrefabThree;
 
     [SerializeField] GameObject ItemPrefab;
 
-    [SerializeField] StartGenerator startGenerator;
-
-    Belt belt;
-
     Vector3 startPosition;
+
+    //ギア１の残り個数のテキスト
+    [SerializeField] GameObject gearOneText;
+    Text gearOneChangeText;
+    public int gearOneNum = 1;
+
+    //ギア２の残り個数のテキスト
+    [SerializeField] GameObject gearTwoText;
+    Text gearTwoChangeText;
+    public int gearTwoNum = 1;
+
+    //ギア３の残り個数のテキスト
+    [SerializeField] GameObject gearThreeText;
+    Text gearThreeChangeText;
+    public int gearThreeNum = 1;
 
     ////////////////////////////////////////////////////////////
     
@@ -67,14 +85,20 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     {
 
         oil = GetComponent<Oil>();
-        belt = GetComponent<Belt>();
-
         ////////////////////////////////////////////////////////////
         
         //ここから巣原が記述
         this.gearDirector = GetComponent<GearDirector>();
 
         this.moveNumText = this.UIManager.GetComponent<UIManager>();
+
+        this.gearOneChangeText = this.gearOneText.GetComponent<Text>();
+        this.gearTwoChangeText = this.gearTwoText.GetComponent<Text>();
+        this.gearThreeChangeText = this.gearThreeText.GetComponent<Text>();
+
+        this.gearOneChangeText.text = "残り" + this.gearOneNum + "個";
+        this.gearTwoChangeText.text = "残り" + this.gearTwoNum + "個";
+        this.gearThreeChangeText.text = "残り" + this.gearThreeNum + "個";
         //ここまで巣原が記述
 
         ////////////////////////////////////////////////////////////
@@ -101,12 +125,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         if (oilCheck)
         {
             oil.OilUpdate();
-
-            startGenerator.powrUp = oil.push;
-            
         }
-
-        //belt.belt = oilCheck;
     }
 
 
@@ -141,12 +160,16 @@ public class GameDirectorDragAndDrop : MonoBehaviour
             {
                 
                 dragAndDropObject = hit2d.collider.gameObject;
-
+                
                 StartPosition();  //移動前のポジションを保存
 
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
+
+                GearState gearState = dragAndDropObject.GetComponent<GearState>();
+                gearState.IsDrag(true);
             }
             //ギア工場だったらギアを生成
+            /*
             else if(hit2d && hit2d.collider.gameObject.tag == Common.GearFactory)
             {
 
@@ -155,7 +178,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                                                                camera.ScreenToWorldPoint(Input.mousePosition).y,
                                                                0);
 
-                dragAndDropObject = Instantiate(gearPrefab, mousePos, Quaternion.identity);
+                dragAndDropObject = Instantiate(gearPrefabOne, mousePos, Quaternion.identity);
                 dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = true;
 
                 ////////////////////////////////////////////////////////////
@@ -171,14 +194,112 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
+            */
+            //大きさ１の歯車を生成
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.GearOneFactory)
+            {
+                if(this.gearOneNum >= 1)
+                {
+                    this.gearOneNum -= 1;
+
+                    this.gearOneChangeText.text = "残り" + this.gearOneNum + "個";
+
+                    Debug.Log("factoryOne");
+                    Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
+                                                                   camera.ScreenToWorldPoint(Input.mousePosition).y,
+                                                                   0);
+
+                    dragAndDropObject = Instantiate(gearPrefabOne, mousePos, Quaternion.identity);
+                    dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = true;
+
+                    ////////////////////////////////////////////////////////////
+
+                    //ここから巣原が記述
+
+                    //ギアを管理するオブジェクトに追加する
+                    gearDirector.gearNumList.Add(dragAndDropObject);
+
+                    //ここまで巣原が記述
+
+                    ////////////////////////////////////////////////////////////
+
+                    dragAndDrop = DragAndDrop.OBJECT_DRAG;
+                    dragAndDrop = DragAndDrop.OBJECT_DROP;
+                    Drop(false);
+                    
+                    dragAndDrop = DragAndDrop.OBJECT_DRAG;
+                }
+
+                
+            }
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.GearTwoFactory)
+            {
+                if(this.gearTwoNum >= 1)
+                {
+                    this.gearTwoNum -= 1;
+
+                    this.gearTwoChangeText.text = "残り" + this.gearTwoNum + "個";
+
+                    Debug.Log("factoryTwo");
+                    Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
+                                                                   camera.ScreenToWorldPoint(Input.mousePosition).y,
+                                                                   0);
+
+                    dragAndDropObject = Instantiate(gearPrefabTwo, mousePos, Quaternion.identity);
+                    dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = true;
+
+                    ////////////////////////////////////////////////////////////
+
+                    //ここから巣原が記述
+
+                    //ギアを管理するオブジェクトに追加する
+                    gearDirector.gearNumList.Add(dragAndDropObject);
+
+                    //ここまで巣原が記述
+
+                    ////////////////////////////////////////////////////////////
+
+                    dragAndDrop = DragAndDrop.OBJECT_DRAG;
+                }
+
+                
+            }
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.GearThreeFactory)
+            {
+                if(this.gearThreeNum >= 1)
+                {
+                    this.gearThreeNum -= 1;
+
+                    this.gearThreeChangeText.text = "残り" + this.gearThreeNum + "個";
+
+                    Debug.Log("factory");
+                    Vector3 mousePos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
+                                                                   camera.ScreenToWorldPoint(Input.mousePosition).y,
+                                                                   0);
+
+                    dragAndDropObject = Instantiate(gearPrefabThree, mousePos, Quaternion.identity);
+                    dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = true;
+
+                    ////////////////////////////////////////////////////////////
+
+                    //ここから巣原が記述
+
+                    //ギアを管理するオブジェクトに追加する
+                    gearDirector.gearNumList.Add(dragAndDropObject);
+
+                    //ここまで巣原が記述
+
+                    ////////////////////////////////////////////////////////////
+
+                    dragAndDrop = DragAndDrop.OBJECT_DRAG;
+                }
+
+                
+            }
             //アイテム工場だったらアイテムを生成
-            else if (hit2d && hit2d.collider.gameObject.tag == Common.OilFactory)
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.ItemFactory)
             {
                 oilCheck = true;
-            }
-            else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory)
-            {
-                belt.belt = true;
             }
             ////////////////////////////////////////////////////////////
 
@@ -212,7 +333,10 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         {
             dragAndDropObject.transform.position = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x, 
                                                                camera.ScreenToWorldPoint(Input.mousePosition).y,
-                                                               0); 
+                                                               0);
+            PolygonCollider2D poligonCollider = dragAndDropObject.GetComponent<PolygonCollider2D>();
+
+            poligonCollider.isTrigger = true;
         }
         else
         {
@@ -222,8 +346,11 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
 
     //オブジェクを置く
-    void Drop()
+    void Drop(bool a = true)
     {
+        GearState gearState = dragAndDropObject.GetComponent<GearState>();
+        gearState.IsDrag(false);
+
         dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = false;
         dragAndDrop = DragAndDrop.OBJECT_GET;
 
@@ -231,12 +358,14 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
         //ここから巣原が記述
 
+        dragAndDropObject.GetComponent<GearTouch>().CanRotateGear();
+
         this.moveNumText.MoveNumPlus();
 
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
 
-        if (hit2d && hit2d.collider.gameObject.tag == Common.GearFactory && this.returnGear)
+        if (hit2d && hit2d.collider.gameObject.tag == Common.GearFactory && this.returnGear && a == true)
         {
             Debug.Log("des");
 
@@ -269,4 +398,17 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     {
         this.itemLayerMaskOn = false;
     }
+
+    //ギアの残り個数のテキストを変更する関数
+    //実装出来たら後で置き換えましょう！
+    /*
+    void IncreaseGearText(GameObject text,int* num)
+    {
+        Text NumText = text.GetComponent<Text>();
+
+        this.
+
+        NumText.text = "残り" + 
+    }
+    */
 }

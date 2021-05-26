@@ -21,7 +21,7 @@ public class GameDirectorState : MonoBehaviour
         //クリアしているか
         if (generator.GearConnect())
         {
-            Debug.Log("クリア");
+            Debug.LogError("クリア");
 
             //電流をオンにする
             this.gearDirector.AllCurrentOn();

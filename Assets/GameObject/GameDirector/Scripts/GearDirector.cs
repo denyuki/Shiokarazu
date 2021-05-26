@@ -25,6 +25,10 @@ public class GearDirector : MonoBehaviour
     int maxGearDistance = 0;
     GearState maxGear;
 
+    //スタートのギアの電流の位置を変更するための変数
+    int minGearDistance = 5;
+    GearState minGear;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -88,10 +92,17 @@ public class GearDirector : MonoBehaviour
                 this.maxGearDistance = this.PowerReceiveList[i].getGearDistance;
                 this.maxGear = this.PowerReceiveList[i];
             }
+
+            if(this.PowerReceiveList[i].getGearDistance < this.minGearDistance)
+            {
+                this.minGearDistance = this.PowerReceiveList[i].getGearDistance;
+                this.minGear = this.PowerReceiveList[i];
+            }
         }
 
-        this.PowerReceiveList[0].CurrentStartPosition();
         this.maxGear.CurrentEndPosition();
+        this.minGear.CurrentStartPosition();
+
     }
 }
 

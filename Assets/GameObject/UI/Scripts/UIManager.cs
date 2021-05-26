@@ -42,8 +42,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     GameObject Timer;
 
-    Text timerText;
-    float timeLimit = 100f;
+    Image timerImage;
+    float MaxLimit = 0;
+    public float timeLimit = 100f;
 
     [SerializeField]
     GameObject startText;
@@ -52,7 +53,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         this.cameraScrollbar = this.scrollbar.GetComponent<Scrollbar>();
-        this.timerText = this.Timer.GetComponent<Text>();
+        this.timerImage = this.Timer.GetComponent<Image>();
 
         this.leftEndPosition = this.stageLeftEnd.transform.position.x + this.leftEndPosition;
         this.rightEndPosition = this.stageRightEnd.transform.position.x + this.rightEndPosition;
@@ -60,15 +61,24 @@ public class UIManager : MonoBehaviour
         //スタートのテキストをオンにする
         this.startText.SetActive(true);
         Invoke("StartTextOff", 2f);
+
+        this.MaxLimit = this.timeLimit;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //最大値以上には回復しません
+        if(this.timeLimit >= this.MaxLimit)
+        {
+            this.timeLimit = this.MaxLimit;
+        }
+
+        //ゲージを少しずつ減らしていく
         if(this.timeLimit > 0)
         {
             this.timeLimit -= Time.deltaTime;
-            this.timerText.text = "" + this.timeLimit;
+            this.timerImage.fillAmount = this.timeLimit / this.MaxLimit;
         }
     }
 
