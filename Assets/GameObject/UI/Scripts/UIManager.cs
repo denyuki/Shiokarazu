@@ -80,6 +80,7 @@ public class UIManager : MonoBehaviour
             this.timeLimit -= Time.deltaTime;
             this.timerImage.fillAmount = this.timeLimit / this.MaxLimit;
         }
+
     }
 
     public void MoveNumPlus()

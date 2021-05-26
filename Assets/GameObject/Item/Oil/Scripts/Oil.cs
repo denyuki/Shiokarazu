@@ -7,7 +7,12 @@ public class Oil : MonoBehaviour
     float decreaseTime = 0.5f;
     int hp = 100;
 
+    public bool push = false;
+
     AudioSource audioSource;
+
+
+    [SerializeField] GameObject uIManager;
 
     [SerializeField] Texture2D texture;
 
@@ -57,10 +62,12 @@ public class Oil : MonoBehaviour
         {
             case OilState.NOEMAL:
                 Nomal();
+                push = false;
                 //Sound();
                 break;
             case OilState.PUSH:
                 Push();
+                push = true;
                 break;
 
         }
@@ -70,13 +77,22 @@ public class Oil : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            //かける音を鳴らす
-            audioSource.clip = puhs;
-            audioSource.loop = true;
-            audioSource.Play();
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
 
-            oilState = OilState.PUSH;           
+            //ギアだったらそのまま移動へ
+            if (hit2d.collider != null && hit2d.collider.gameObject.tag == Common.StartGenerate)
+            {
+                //かける音を鳴らす
+                audioSource.clip = puhs;
+                audioSource.loop = true;
+                audioSource.Play();
+
+                oilState = OilState.PUSH;
+
+            }
         }
+
     }
 
     void Push()
@@ -88,8 +104,13 @@ public class Oil : MonoBehaviour
             hp--;
             decreaseTime = 0.5f;
 
-            Debug.Log(hp);
+            //Debug.Log(hp);
+
+            uIManager.GetComponent<UIManager>().timeLimit += Time.deltaTime * 100;
+
+            Debug.Log("11111");
         }
+
 
         if (Input.GetMouseButtonUp(0))
         {

@@ -4,7 +4,7 @@ public class Common
 {
 
     public const string Gear = "Gear";
-    public const string StartGenerate = "StartGenerate";
+    public const string StartGenerate = "StartGenerator";
     public const string GearFactory = "GearFactory";
     public const string ItemFactory = "ItemFactory";
     public const string OpenSwitch = "OpenSwitch";
@@ -12,6 +12,8 @@ public class Common
     public const string GearOneFactory = "GearOneFactory";
     public const string GearTwoFactory = "GearTwoFactory";
     public const string GearThreeFactory = "GearThreeFactory";
+    public const string OilFactory = "OilFactory";
+    public const string BeltFactory = "BeltFactory";
 
     public const string LightningStart = "LightningStart";
     public const string LightningEnd = "LightningEnd";

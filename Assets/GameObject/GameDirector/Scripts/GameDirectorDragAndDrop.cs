@@ -65,8 +65,10 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
 
     Oil oil;
+    Belt belt;
 
     bool oilCheck = false;
+    bool beltCheck = false;
 
     //ここまで巣原が記述
 
@@ -85,6 +87,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     {
 
         oil = GetComponent<Oil>();
+        belt = GetComponent<Belt>();
         ////////////////////////////////////////////////////////////
         
         //ここから巣原が記述
@@ -126,6 +129,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         {
             oil.OilUpdate();
         }
+
+        belt.belt = beltCheck;
     }
 
 
@@ -297,15 +302,18 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 
             }
             //アイテム工場だったらアイテムを生成
-            else if (hit2d && hit2d.collider.gameObject.tag == Common.ItemFactory)
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.OilFactory)
             {
                 oilCheck = true;
+            }
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory){
+                beltCheck = true;
             }
             ////////////////////////////////////////////////////////////
 
             //ここから巣原が記述
 
-            else if(hit2d && hit2d.collider.gameObject.tag == Common.OpenSwitch)
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.OpenSwitch)
             {
                 this.moveNumText.ChangeBoxButtonState();
             }

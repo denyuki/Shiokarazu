@@ -11,6 +11,9 @@ public class Belt : MonoBehaviour
 
     [SerializeField] Camera camera;
 
+
+    public bool belt = false;
+
     enum BeltState
     {
         NOLMAL,
@@ -28,6 +31,10 @@ public class Belt : MonoBehaviour
 
     float distance = 0;
 
+    int beltPower = 0;
+
+    bool right = false;
+
 
     Vector3[] poss = new Vector3[100];
 
@@ -35,7 +42,7 @@ public class Belt : MonoBehaviour
     GameObject[] game = new GameObject[100];
 
 
-    [SerializeField] GameObject p;
+    [SerializeField] GameObject beltPrefab;
 
 
     [SerializeField] Gear[] Gears;
@@ -50,7 +57,12 @@ public class Belt : MonoBehaviour
 
         public Vector3 point5;
         public Vector3 point6;
+
         public float radius = 1;
+        public int power;
+        public int beltPower;
+
+        public GameObject gear;
     }
     int gearsListCount = 0;
 
@@ -66,6 +78,9 @@ public class Belt : MonoBehaviour
 
         public bool lien = false;
 
+
+        public Vector3 startPos;
+        public Vector3 endPos;
 
         public float moveCountDownMax;
 
@@ -91,8 +106,7 @@ public class Belt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        if (Input.GetMouseButtonDown(0) && gearsListCount != 3)
+        if (Input.GetMouseButtonUp(0) && gearsListCount != 2 && belt)
         {
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
@@ -100,38 +114,108 @@ public class Belt : MonoBehaviour
             //ギアだったらそのまま移動へ
             if (hit2d.collider.gameObject.tag == Common.Gear)
             {
-
                 Gears[gearsListCount].pos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
                                                camera.ScreenToWorldPoint(Input.mousePosition).y,
                                                0);
+                Gears[gearsListCount].radius = hit2d.collider.gameObject.GetComponent<GearState>().gearPower;
+
+                Gears[gearsListCount].gear = hit2d.collider.gameObject;
+
                 gearsListCount++;
 
-                if (gearsListCount == 3)
+                if (gearsListCount == 2)
                 {
                     beltState = BeltState.PREPARATION;
                 }
             }
-            
         }
-
-
 
 
         switch (beltState)
         { 
             case BeltState.PREPARATION:
-                GearStatus();
+                GearStatus2();
+                PowerConnect();
                 break;
 
             case BeltState.SPIN:
                 Spin();
-            break;
+                break;
         }
        
 
     }
 
 
+    void GearStatus2()
+    {
+        for (int i = 0; i < Gears.Length; i++)
+        {
+
+            int iNext = i + 1;
+            int iPrev = i - 1;
+
+            if (iNext == Gears.Length)
+            {
+                iNext = 0;
+            }
+
+            if (i == 0)
+            {
+                iPrev = Gears.Length - 1;
+            }
+
+
+            //Next
+            x = Mathf.Cos(Mathf.Atan2(Gears[iNext].pos.x - Gears[i].pos.x, Gears[iNext].pos.y - Gears[i].pos.y)) * Gears[i].radius;
+            y = Mathf.Sin(Mathf.Atan2(Gears[iNext].pos.x - Gears[i].pos.x, Gears[iNext].pos.y - Gears[i].pos.y)) * Gears[i].radius;
+
+            Vector3 nowNextPos = new Vector3(y, x, 0);
+
+
+            x = Mathf.Cos(90 * Mathf.Deg2Rad) * nowNextPos.x - Mathf.Sin(90 * Mathf.Deg2Rad) * nowNextPos.y;
+            y = Mathf.Sin(90 * Mathf.Deg2Rad) * nowNextPos.x + Mathf.Cos(90 * Mathf.Deg2Rad) * nowNextPos.y;
+
+            Gears[i].point1 = new Vector3(x, y, 0);
+
+            x = Mathf.Cos(-90 * Mathf.Deg2Rad) * nowNextPos.x - Mathf.Sin(-90 * Mathf.Deg2Rad) * nowNextPos.y;
+            y = Mathf.Sin(-90 * Mathf.Deg2Rad) * nowNextPos.x + Mathf.Cos(-90 * Mathf.Deg2Rad) * nowNextPos.y;
+
+            Gears[i].point2 = new Vector3(x, y, 0);
+
+
+
+            //Preve
+            x = Mathf.Cos(Mathf.Atan2(Gears[iPrev].pos.x - Gears[i].pos.x, Gears[iPrev].pos.y - Gears[i].pos.y)) * Gears[i].radius;
+            y = Mathf.Sin(Mathf.Atan2(Gears[iPrev].pos.x - Gears[i].pos.x, Gears[iPrev].pos.y - Gears[i].pos.y)) * Gears[i].radius;
+
+            Vector3 nowPrevPos = new Vector3(y, x, 0);
+            //Debug.Log(Mathf.Atan2(nowPrevPos.x, nowPrevPos.y) * Mathf.Rad2Deg);
+
+            x = Mathf.Cos(90 * Mathf.Deg2Rad) * nowPrevPos.x - Mathf.Sin(90 * Mathf.Deg2Rad) * nowPrevPos.y;
+            y = Mathf.Sin(90 * Mathf.Deg2Rad) * nowPrevPos.x + Mathf.Cos(90 * Mathf.Deg2Rad) * nowPrevPos.y;
+
+            Gears[i].point3 = new Vector3(x, y, 0);
+
+
+            x = Mathf.Cos(-90 * Mathf.Deg2Rad) * nowPrevPos.x - Mathf.Sin(-90 * Mathf.Deg2Rad) * nowPrevPos.y;
+            y = Mathf.Sin(-90 * Mathf.Deg2Rad) * nowPrevPos.x + Mathf.Cos(-90 * Mathf.Deg2Rad) * nowPrevPos.y;
+
+            Gears[i].point4 = new Vector3(x, y, 0);
+
+
+
+            float angleP1 = change(Mathf.Atan2(Gears[i].point1.x, Gears[i].point1.y) * Mathf.Rad2Deg);
+            float angleP2 = change(Mathf.Atan2(Gears[i].point2.x, Gears[i].point2.y) * Mathf.Rad2Deg);
+
+
+            Gears[i].point5 = Gears[i].point1;
+            Gears[i].point6 = Gears[i].point2;
+
+        }
+        BeltPointSet();
+    }
+    /*
     void GearStatus()
     {
 
@@ -210,17 +294,9 @@ public class Belt : MonoBehaviour
                 }
             }else
             {
-                if (i == 2)
-                {
-                    Debug.Log("a");
-                }
                 if ((angleP3 > angleP1 && -180 <= angleP1) || (angleP4 < angleP1 && 180 >= angleP1))
                 {
                     Gears[i].point5 = Gears[i].point1;
-                    if (i == 2)
-                    {
-                        Debug.Log("a");
-                    }
                 }
                 else
                 {
@@ -258,17 +334,18 @@ public class Belt : MonoBehaviour
         BeltPointSet();
     }
 
-
+            */
 
     void BeltPointSet()
     {
         int j = 0;
-        Debug.Log(Gears.Length);
+        //Debug.Log(Gears.Length);
 
         for (int i = 0; i < Gears.Length; i++)
         {
+
             int iNext = i + 1;
-            int iPrev = i - 1;
+            //int iPrev = i - 1;
 
             if (iNext == Gears.Length)
             {
@@ -277,7 +354,7 @@ public class Belt : MonoBehaviour
 
             if (i == 0)
             {
-                iPrev = Gears.Length - 1;
+                //iPrev = Gears.Length - 1;
             }
 
             Vector3 pos;
@@ -287,42 +364,39 @@ public class Belt : MonoBehaviour
             float angle = Mathf.Acos(((Gears[i].point5.x * Gears[i].point6.x + Gears[i].point5.y * Gears[i].point6.y) / (a * b))) * Mathf.Rad2Deg;
 
 
-
-
             //点の間隔
             float ax = 0.3f * 360 / ((Gears[i].radius * 2) * 3.14f);
 
-          
-
+ 
             float nowAngle = 0;
 
             pos = Gears[i].point6;
-            this.line.positionCount++;
-            line.SetPosition(j, new Vector3(Gears[i].pos.x + Gears[i].point6.x, Gears[i].pos.y + Gears[i].point6.y, 0));
 
             beltPoints[j].pos = new Vector3(x + Gears[i].pos.x, y + Gears[i].pos.y, 0);
             beltPoints[j].moveCountDown = angle - nowAngle;
             beltPoints[j].gearNumber = i;
             beltPoints[j].lien = false;
 
-            j++;
+            this.line.positionCount++;
+            line.SetPosition(j, new Vector3(Gears[i].pos.x + Gears[i].point6.x, Gears[i].pos.y + Gears[i].point6.y, 0));
 
-            
+            j++;
             while (angle > nowAngle)
             {
-                if ( ((Gears[0].pos.y > Gears[1].pos.y) && (Gears[Gears.Length - 1].pos.y > Gears[1].pos.y)))
-                {
-                    x = Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.y;
-                    y = Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.y;
-                }else
-                {
-                    x = Mathf.Cos(ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(ax * Mathf.Deg2Rad) * pos.y;
-                    y = Mathf.Sin(ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(ax * Mathf.Deg2Rad) * pos.y;
-                }
+                x = Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.y;
+                y = Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.y;
 
 
                 beltPoints[j].pos = new Vector3(x + Gears[i].pos.x, y + Gears[i].pos.y, 0);
-                beltPoints[j].moveCountDown = angle - nowAngle;
+                if (!right)
+                {
+                    beltPoints[j].moveCountDown = angle - nowAngle;
+                }
+                else
+                {
+                    beltPoints[j].moveCountDown = nowAngle;
+                }
+
                 beltPoints[j].gearNumber = i;
                 beltPoints[j].lien = false;
 
@@ -335,7 +409,118 @@ public class Belt : MonoBehaviour
                 nowAngle += ax;
             }
 
+            /*
+            while (angle > nowAngle)
+            {
 
+                if (((Gears[2].pos.y < Gears[1].pos.y) && (Gears[2].pos.y < Gears[0].pos.y)) && (((Gears[0].pos.x < Gears[1].pos.x) && (Gears[0].pos.x < Gears[2].pos.x)) || ((Gears[0].pos.x > Gears[1].pos.x) && (Gears[0].pos.x > Gears[2].pos.x))))
+                {
+
+                    if (((Gears[0].pos.y > Gears[1].pos.y) && (Gears[0].pos.y > Gears[2].pos.y)) || ((Gears[0].pos.x < Gears[2].pos.x) && (Gears[0].pos.x < Gears[2].pos.x)))
+                    {
+                        x = Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.y;
+                        y = Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.y;
+                        right = false;
+                    }
+
+                    if (((Gears[0].pos.y < Gears[1].pos.y) && (Gears[0].pos.y < Gears[2].pos.y)) || ((Gears[0].pos.x > Gears[2].pos.x) && (Gears[0].pos.x > Gears[2].pos.x)))
+                    {
+                        x = Mathf.Cos(ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(ax * Mathf.Deg2Rad) * pos.y;
+                        y = Mathf.Sin(ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(ax * Mathf.Deg2Rad) * pos.y;
+                        right = true;
+                    }
+
+
+                }
+                else if(((Gears[2].pos.y > Gears[1].pos.y) && (Gears[2].pos.y > Gears[0].pos.y)) && (((Gears[0].pos.x < Gears[1].pos.x) && (Gears[0].pos.x < Gears[2].pos.x)) || ((Gears[0].pos.x > Gears[1].pos.x) && (Gears[0].pos.x > Gears[2].pos.x))))
+                {
+
+                    if (((Gears[0].pos.y > Gears[1].pos.y) && (Gears[0].pos.y > Gears[2].pos.y)) || ((Gears[0].pos.x < Gears[2].pos.x) && (Gears[0].pos.x < Gears[2].pos.x)))
+                    {
+                        x = Mathf.Cos(ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(ax * Mathf.Deg2Rad) * pos.y;
+                        y = Mathf.Sin(ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(ax * Mathf.Deg2Rad) * pos.y;
+                        right = true;
+
+                    }
+
+                    if (((Gears[0].pos.y < Gears[1].pos.y) && (Gears[0].pos.y < Gears[2].pos.y)) || ((Gears[0].pos.x > Gears[2].pos.x) && (Gears[0].pos.x > Gears[2].pos.x)))
+                    {
+                        x = Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.y;
+                        y = Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.y;
+                        right = false;
+                    }
+ 
+                }
+                else if (((Gears[2].pos.x> Gears[1].pos.x) && (Gears[2].pos.x > Gears[0].pos.x)) && (((Gears[0].pos.y < Gears[1].pos.y) && (Gears[0].pos.x < Gears[2].pos.x)) || ((Gears[0].pos.y > Gears[1].pos.y) && (Gears[0].pos.x < Gears[2].pos.x))))
+                {
+
+                    if (((Gears[0].pos.y > Gears[1].pos.y) && (Gears[0].pos.y > Gears[2].pos.y)) || ((Gears[0].pos.x < Gears[2].pos.x) && (Gears[0].pos.x < Gears[2].pos.x)))
+                    {
+                        x = Mathf.Cos(ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(ax * Mathf.Deg2Rad) * pos.y;
+                        y = Mathf.Sin(ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(ax * Mathf.Deg2Rad) * pos.y;
+                        right = true;
+
+                    }
+
+                    if (((Gears[0].pos.y < Gears[1].pos.y) && (Gears[0].pos.y < Gears[2].pos.y)) || ((Gears[0].pos.x > Gears[2].pos.x) && (Gears[0].pos.x > Gears[2].pos.x)))
+                    {
+                        x = Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.y;
+                        y = Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.y;
+                        right = false;
+                    }
+
+                }
+                else if (((Gears[2].pos.x < Gears[1].pos.x) && (Gears[2].pos.x < Gears[0].pos.x)) && (((Gears[0].pos.y > Gears[1].pos.y) && (Gears[0].pos.x > Gears[2].pos.x)) || ((Gears[0].pos.y < Gears[1].pos.y) && (Gears[0].pos.x > Gears[2].pos.x))))
+                {
+
+                    if (((Gears[0].pos.y > Gears[1].pos.y) && (Gears[0].pos.y > Gears[2].pos.y)) || ((Gears[0].pos.x < Gears[2].pos.x) && (Gears[0].pos.x < Gears[2].pos.x)))
+                    {
+                        x = Mathf.Cos(ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(ax * Mathf.Deg2Rad) * pos.y;
+                        y = Mathf.Sin(ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(ax * Mathf.Deg2Rad) * pos.y;
+                        right = true;
+
+                    }
+
+                    if (((Gears[0].pos.y < Gears[1].pos.y) && (Gears[0].pos.y < Gears[2].pos.y)) || ((Gears[0].pos.x > Gears[2].pos.x) && (Gears[0].pos.x > Gears[2].pos.x)))
+                    {
+                        x = Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.x - Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.y;
+                        y = Mathf.Sin(-ax * Mathf.Deg2Rad) * pos.x + Mathf.Cos(-ax * Mathf.Deg2Rad) * pos.y;
+                        right = false;
+                    }
+    
+                }
+
+
+
+
+            beltPoints[j].pos = new Vector3(x + Gears[i].pos.x, y + Gears[i].pos.y, 0);
+                if (!right)
+                {
+                    beltPoints[j].moveCountDown = angle - nowAngle;
+                }
+                else
+                {
+                    beltPoints[j].moveCountDown = nowAngle;
+                }
+
+                beltPoints[j].gearNumber = i;
+                beltPoints[j].lien = false;
+
+                this.line.positionCount++;
+                line.SetPosition(j, new Vector3(x + Gears[i].pos.x, y + Gears[i].pos.y, 0));
+                j++;
+
+                pos = new Vector3(x, y, 0);
+
+                nowAngle += ax;
+            }
+                            */
+
+
+            Vector3 startPos = new Vector3(Gears[i].pos.x + Gears[i].point5.x, Gears[i].pos.y + Gears[i].point5.y, 0);
+            Vector3 endPos = new Vector3(Gears[iNext].pos.x + Gears[iNext].point6.x, Gears[iNext].pos.y + Gears[iNext].point6.y, 0);
+
+            float max = Mathf.Abs(Mathf.Sqrt(Mathf.Pow(endPos.x - startPos.x, 2) + Mathf.Pow(endPos.y - startPos.y, 2)));
 
 
 
@@ -343,18 +528,17 @@ public class Belt : MonoBehaviour
                 line.SetPosition(j, new Vector3(Gears[i].pos.x + Gears[i].point5.x, Gears[i].pos.y + Gears[i].point5.y, 0));
             
             beltPoints[j].pos = new Vector3(x + Gears[i].pos.x, y + Gears[i].pos.y, 0);
-            beltPoints[j].moveCountDown = Mathf.Abs(Mathf.Sqrt(Mathf.Pow((Gears[iPrev].pos.x + Gears[iPrev].point6.x) - (Gears[i].pos.x + Gears[i].point5.x), 2) + Mathf.Pow((Gears[iPrev].pos.y + Gears[iPrev].point6.y) - (Gears[i].pos.y + Gears[i].point5.y), 2)));
+            beltPoints[j].moveCountDown = Mathf.Abs(Mathf.Sqrt(Mathf.Pow((Gears[iNext].pos.x + Gears[iNext].point6.x) - (Gears[i].pos.x + Gears[i].point5.x), 2) + Mathf.Pow((Gears[iNext].pos.y + Gears[iNext].point6.y) - (Gears[i].pos.y + Gears[i].point5.y), 2)));
+            beltPoints[j].moveCountDownMax = max;
             beltPoints[j].gearNumber = i;
-            beltPoints[j].lien = true;         
+            beltPoints[j].lien = true;
+
+           // beltPoints[j].startPos = new Vector3(Gears[i].point5.x + Gears[i].pos.x, Gears[i].point5.y + Gears[i].pos.y);
+            //beltPoints[j].endPos = new Vector3(Gears[i + 1].point6.x + Gears[i + 1].pos.x, Gears[i + 1].point6.y + Gears[i + 1].pos.y);
             j++;
 
 
 
-
-            Vector3 startPos = new Vector3(Gears[i].pos.x + Gears[i].point5.x, Gears[i].pos.y + Gears[i].point5.y, 0);
-            Vector3 endPos = new Vector3(Gears[iNext].pos.x + Gears[iNext].point6.x, Gears[iNext].pos.y + Gears[iNext].point6.y, 0);
-
-            float max = Mathf.Abs(Mathf.Sqrt(Mathf.Pow(endPos.x - startPos.x, 2) + Mathf.Pow(endPos.y - startPos.y, 2)));
 
             for (float move = 0.3f; move < max; move += 0.3f)
             {
@@ -366,6 +550,10 @@ public class Belt : MonoBehaviour
                 beltPoints[j].moveCountDownMax = max;
                 beltPoints[j].gearNumber = i;
                 beltPoints[j].lien = true;
+
+
+               // beltPoints[j].startPos = new Vector3(Gears[i].point5.x + Gears[i].pos.x, Gears[i].point5.y + Gears[i].pos.y);
+               // beltPoints[j].endPos = new Vector3(Gears[i + 1].point6.x + Gears[i + 1].pos.x, Gears[i + 1].point6.y + Gears[i + 1].pos.y);
 
                 j++;
             }
@@ -388,7 +576,7 @@ public class Belt : MonoBehaviour
 
             Vector3 rotation = new Vector3(0, 0, -rot + 90f);
 
-            beltPoints[nowBeltPointNumber].game = Instantiate(p, line.GetPosition(nowBeltPointNumber), Quaternion.Euler(rotation));
+            beltPoints[nowBeltPointNumber].game = Instantiate(beltPrefab, line.GetPosition(nowBeltPointNumber), Quaternion.Euler(rotation));
         }
 
 
@@ -406,9 +594,11 @@ public class Belt : MonoBehaviour
         return a;
     }
 
+
     void Spin()
     {
-        for (int i = 1; i < line.positionCount; i++)
+
+        for (int i = 0; i < line.positionCount; i++)
         {
             int nowBeltPointNumber = i;
             int nextBeltPoitNumber = i + 1;
@@ -432,20 +622,22 @@ public class Belt : MonoBehaviour
 
             if (!beltPoints[i].lien)
             {
-
-
-
                 float ax = (0.3f * Time.deltaTime) * 360 / ((Gears[beltPoints[i].gearNumber].radius * 2) * 3.14f);
 
                 beltPoints[i].game.transform.position = new Vector3(nowgameObje.transform.position.x - Gears[gearNumber].pos.x, nowgameObje.transform.position.y - Gears[gearNumber].pos.y);
+
+
 
                 x = Mathf.Cos(-ax * Mathf.Deg2Rad) * nowgameObje.transform.position.x - Mathf.Sin(-ax * Mathf.Deg2Rad) * nowgameObje.transform.position.y;
                 y = Mathf.Sin(-ax * Mathf.Deg2Rad) * nowgameObje.transform.position.x + Mathf.Cos(-ax * Mathf.Deg2Rad) * nowgameObje.transform.position.y;
 
 
                 beltPoints[i].moveCountDown -= ax;
+
+
                 if (beltPoints[i].moveCountDown < 0)
                 {
+
                     beltPoints[i].lien = true;
 
                     Vector3 startPos = new Vector3(Gears[gearNumber].point5.x + Gears[gearNumber].pos.x, Gears[gearNumber].point5.y + Gears[gearNumber].pos.y);
@@ -456,28 +648,33 @@ public class Belt : MonoBehaviour
 
                     beltPoints[i].moveCountDownMax = beltPoints[i].moveCountDown;
 
+                    if (right)
+                    {
+                        beltPoints[i].gearNumber--;
 
+                        if (beltPoints[i].gearNumber == -1)
+                        {
+                            beltPoints[i].gearNumber = Gears.Length - 1;
+                        }
+                    }
                 }
 
 
                 beltPoints[i].game.transform.position = new Vector3(x + Gears[gearNumber].pos.x, y + Gears[gearNumber].pos.y, 0);
-
-
             }
             else
             {
-
-
-                //float yy = Mathf.Sin(Mathf.Atan2(Gears[nextgearNumber].point6.x - Gears[gearNumber].point5.x, Gears[nextgearNumber].point6.y - Gears[gearNumber].point5.y)) * (0.3f * Time.deltaTime);
-                //float xx = Mathf.Cos(Mathf.Atan2(Gears[nextgearNumber].point6.x - Gears[gearNumber].point5.x, Gears[nextgearNumber].point6.y - Gears[gearNumber].point5.y)) * (0.3f * Time.deltaTime);
-
-
                 Vector3 startPos = new Vector3(Gears[gearNumber].point5.x + Gears[gearNumber].pos.x, Gears[gearNumber].point5.y + Gears[gearNumber].pos.y);
                 Vector3 endPos = new Vector3(Gears[nextgearNumber].point6.x + Gears[nextgearNumber].pos.x, Gears[nextgearNumber].point6.y + Gears[nextgearNumber].pos.y);
 
-
-                beltPoints[i].game.transform.position = Vector3.Lerp(startPos, endPos, 1f - beltPoints[i].moveCountDown / beltPoints[i].moveCountDownMax);
-
+                if (right)
+                {
+                    beltPoints[i].game.transform.position = Vector3.Lerp(startPos, endPos, beltPoints[i].moveCountDown / beltPoints[i].moveCountDownMax);
+                }
+                else
+                {
+                    beltPoints[i].game.transform.position = Vector3.Lerp(startPos, endPos, 1f - beltPoints[i].moveCountDown / beltPoints[i].moveCountDownMax);
+                }
 
                 beltPoints[i].moveCountDown -= (0.3f * Time.deltaTime);
 
@@ -487,11 +684,17 @@ public class Belt : MonoBehaviour
 
                     beltPoints[i].lien = false;
 
-                    beltPoints[i].gearNumber++;
-
-                    if (beltPoints[i].gearNumber == Gears.Length)
+                    if (!right)
                     {
-                        beltPoints[i].gearNumber = 0;
+                        beltPoints[i].gearNumber++;
+                        if (i == 1)
+                        {
+                            Debug.Log(beltPoints[i].gearNumber);
+                        }
+                        if (beltPoints[i].gearNumber == Gears.Length)
+                        {
+                            beltPoints[i].gearNumber = 0;
+                        }
                     }
 
 
@@ -508,10 +711,25 @@ public class Belt : MonoBehaviour
 
             float rot = Mathf.Atan2(nextgameObje.transform.position.x - nowgameObje.transform.position.x, nextgameObje.transform.position.y - nowgameObje.transform.position.y) * Mathf.Rad2Deg;
 
-            Vector3 rotation = new Vector3(0, 0, -rot - 90f);
+            Vector3 rotation = new Vector3(0, 0, -rot + 90f);
 
 
             beltPoints[i].game.transform.rotation = Quaternion.Euler(rotation);
+
+        }
+    }
+
+
+    void PowerConnect()
+    {
+        for (int i = 0; i < Gears.Length; i++)
+        {
+            beltPower += Gears[i].gear.GetComponent<GearState>().gearPower;
+        }
+
+        for(int i = 0; i < Gears.Length; i++)
+        {
+            Gears[i].gear.GetComponent<GearState>().beltPower = beltPower;
         }
     }
 }
