@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class Spinning : MonoBehaviour
 {
-    [SerializeField]
-    private Vector3 speedRot;
+    public Vector3 speedRot;
 
     [SerializeField]
     private int values = 5;

@@ -8,6 +8,10 @@ public class Common
     public const string GearFactory = "GearFactory";
     public const string ItemFactory = "ItemFactory";
     public const string OpenSwitch = "OpenSwitch";
+    public const string StageGear = "StageGear";
+    public const string GearOneFactory = "GearOneFactory";
+    public const string GearTwoFactory = "GearTwoFactory";
+    public const string GearThreeFactory = "GearThreeFactory";
 
     public const string LightningStart = "LightningStart";
     public const string LightningEnd = "LightningEnd";

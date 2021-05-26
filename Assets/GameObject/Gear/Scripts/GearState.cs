@@ -29,7 +29,7 @@ public class GearState : MonoBehaviour
 
     //触れているギアの情報を保持しておく変数
     public List<GearState> gearList = new List<GearState>();
-    int gearDistance = 0;
+    public int gearDistance = 0;
 
     //力を渡すギアを保存しておく変数
     public List<GearState> receivePowerList = new List<GearState>();
@@ -41,6 +41,11 @@ public class GearState : MonoBehaviour
     //力を渡す専用の変数
     [SerializeField]
     float  receivePower = 0;
+
+    //ベルトから力を受け取る用の変数
+    public float beltPower = 0;
+
+    bool isDrag = false;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +63,33 @@ public class GearState : MonoBehaviour
         }
 
         this.receivePower = this.gearReceivePower;
+
+        //一定距離以上離れていたら歯車の触れているリストから削除する計算
+        for(int i = 0; i < gearList.Count; ++i)
+        {
+            float distance = 0;
+            float distanceX = 0;
+            float distanceY = 0;
+
+            distanceX = Mathf.Abs(gameObject.transform.position.x - gearList[i].gameObject.transform.position.x);
+            distanceY = Mathf.Abs(gameObject.transform.position.y - gearList[i].gameObject.transform.position.y);
+
+            distance = Mathf.Sqrt(distanceX * distanceX + distanceY * distanceY);
+
+            //お互いの半径の合計より離れていたらリストから削除
+            if (distance > this.gearPower + gearList[i].gearPower)
+            {
+                Debug.LogWarning(gameObject.name + " から削除されたよ " + gearList[i].gameObject.name);
+
+                if(this.gearDistance == gearList[i].getGearDistance)
+                {
+                    this.gearDistance = 0;
+                }
+
+                gearList.Remove(gearList[i]);
+                
+            }
+        }
     }
 
     //歯車の状態がsingleの時呼ばれる関数
@@ -132,15 +164,113 @@ public class GearState : MonoBehaviour
             //this.receivePowerList[i].GearReceivePower(this.percentOfReceivePower[i]);
             if(this.gearDistance < this.receivePowerList[i].getGearDistance)
             {
-                this.receivePowerList[i].GearReceivePower(this.receivePower + this.gearPower);
+                //ベルトから力を受け取っている場合はそっちを渡す
+                if(this.beltPower > this.receivePower)
+                {
+                    this.receivePowerList[i].GearReceivePower(this.receivePower + this.beltPower);
+                }
+                else
+                {
+                    this.receivePowerList[i].GearReceivePower(this.receivePower + this.gearPower);
+                }
+                
             }
         }
     }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == Common.Gear)
+        {
+            if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            {
+                return;
+            }
+        }
+
+        //つながっている歯車の情報を持つ
+        if (collision.gameObject.tag == Common.Gear ||collision.gameObject.tag == Common.StageGear)
+        {
+            bool addList = true;
+            for (int i = 0; i < gearList.Count; ++i)
+            {
+                //Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
+                if (gearList[i].gameObject == collision.gameObject)
+                {
+                    addList = false;
+                    break;
+                }
+            }
+
+            if (addList)
+            {
+                gearList.Add(collision.gameObject.GetComponent<GearState>());
+
+                if (!this.startGear)
+                {
+                    int min = 100;
+
+                    for (int j = 0; j < gearList.Count; ++j)
+                    {
+                        if (gearList[j].getGearDistance < min)
+                        {
+                            if(!(gearList[j].gameObject.tag == Common.StageGear && gearList[j].getGearDistance == 0))
+                            {
+                                min = gearList[j].getGearDistance;
+                            }
+                            
+                        }
+                    }
+                    Debug.LogError(collision.gameObject.name);
+                    this.gearDistance = min + 1;
+                }
+
+                Debug.Log(this.gearDistance);
+            }
+        }
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == Common.Gear)
+        {
+            if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            {
+                return;
+            }
+        }
+
+        GearState gearState;
+
+        if (!(collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear))
+        {
+            return;
+        }
+
+        gearState = collision.gameObject.GetComponent<GearState>();
+
+        this.receivePower = gearState.ReturnGearReceivePower();
+    }
+    
     void OnTriggerStay2D(Collider2D collision)
     {
+        if (collision.gameObject.tag == Common.Gear)
+        {
+            if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            {
+                return;
+            }
+        }
+
+        //ドラッグされている最中は処理を行わない
+        if (this.isDrag)
+        {
+            return;
+        }
+
         //つながっている歯車の情報を持つ
-        if(collision.gameObject.tag == Common.Gear)
+        if(collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
         {
             bool addList = true;
             for(int i = 0; i < gearList.Count; ++i)
@@ -165,7 +295,10 @@ public class GearState : MonoBehaviour
                     {
                         if (gearList[j].getGearDistance < min)
                         {
-                            min = gearList[j].getGearDistance;
+                            if (!(gearList[j].gameObject.tag == Common.StageGear && gearList[j].getGearDistance == 0))
+                            {
+                                min = gearList[j].getGearDistance;
+                            }
                         }
                     }
 
@@ -180,9 +313,23 @@ public class GearState : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.gameObject.tag == Common.Gear)
+        {
+            if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            {
+                return;
+            }
+        }
+
+        //ドラッグされている最中は処理を行わない
+        if (this.isDrag)
+        {
+            return;
+        }
+
         GearState gearState;
 
-        if(!(collision.gameObject.tag == Common.Gear))
+        if(!(collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear))
         {
             return;
         }
@@ -191,14 +338,7 @@ public class GearState : MonoBehaviour
         
         this.receivePower = gearState.ReturnGearReceivePower();
     }
-
-    void OnTriggerExit2D(Collider2D collision)
-    {
-        if(collision.gameObject.tag == "Gear")
-        {
-            gearList.Remove(collision.gameObject.GetComponent<GearState>());
-        }
-    }
+    
 
     public int getGearDistance
     {
@@ -300,6 +440,8 @@ public class GearState : MonoBehaviour
 
         //電流をオンにする
         currentOnSwitch.SetActive(true);
+
+        transform.DetachChildren();
     }
 
     public void CurrentStartPosition()
@@ -328,5 +470,15 @@ public class GearState : MonoBehaviour
         rightEnd = rightEndTransform.gameObject;
 
         rightEnd.transform.localPosition = new Vector3(0.5f, 0f, 0f);
+    }
+
+    public void IsDrag(bool value)
+    {
+        this.isDrag = value;
+    }
+
+    public bool IsDrag()
+    {
+        return this.isDrag;
     }
 }

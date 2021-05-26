@@ -10,6 +10,10 @@ TagManager:
   - GearFactory
   - ItemFactory
   - OpenSwitch
+  - StageGear
+  - GearOneFactory
+  - GearTwoFactory
+  - GearThreeFactory
   layers:
   - Default
   - TransparentFX

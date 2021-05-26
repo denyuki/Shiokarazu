@@ -29,6 +29,7 @@ public class Generator : MonoBehaviour
     //ギアとつながっているか
     public bool GearConnect()
     {
+
         if (gearState != null && !gearTouch.DragAndDrop)
         {
 
@@ -42,13 +43,14 @@ public class Generator : MonoBehaviour
     //ギアが繋がっていてクリアしているか（再起関数）
     bool ConnectChase(GearState gear)
     {
+        Debug.LogWarning("1");
 
         int geraDistance = gear.getGearDistance;
 
         int distance = gear.gearList[0].getGearDistance;
         int count = 0;
 
-
+        Debug.LogWarning(gear.gearList.Count + "GearListCount");
         //ジェネレーターに近いギアを探す
         for (int i = 1; i < gear.gearList.Count; i++)
         {
@@ -60,7 +62,7 @@ public class Generator : MonoBehaviour
         }
 
         nowPower += gear.gearList[count].gearPower;
-        Debug.Log("nowPower"+ nowPower);
+        Debug.Log("nowPower"+ nowPower + " ClearPower" + clearPower + " GearDistance" + geraDistance);
 
         //ジェネレーターとつながっているか
         if (geraDistance == 0)
@@ -82,10 +84,32 @@ public class Generator : MonoBehaviour
         return ConnectChase(gear.gearList[count]);
     }
 
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
+        
+
+        if (collision.gameObject.tag == Common.Gear)
+        {
+            gearState = collision.gameObject.GetComponent<GearState>();
+            gearTouch = collision.gameObject.GetComponent<GearTouch>();
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == Common.Gear)
+        {
+            gearState = null;
+            gearTouch = null;
+
+        }
+    }
+
+    
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        
+
         if (collision.gameObject.tag == Common.Gear)
         {
             gearState = collision.gameObject.GetComponent<GearState>();
@@ -102,4 +126,5 @@ public class Generator : MonoBehaviour
             
         }
     }
+    
 }
