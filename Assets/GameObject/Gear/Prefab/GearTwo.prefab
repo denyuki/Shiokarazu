@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ff6071293e65f4bbd7e44ba1840932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gearPower: 1
+  gearPower: 2
   beforeGear: {fileID: 0}
   startGear: 0
   gearList: []
