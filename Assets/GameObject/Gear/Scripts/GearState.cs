@@ -90,6 +90,7 @@ public class GearState : MonoBehaviour
                 
             }
         }
+
     }
 
     //歯車の状態がsingleの時呼ばれる関数

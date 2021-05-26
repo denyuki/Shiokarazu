@@ -42,7 +42,7 @@ public class Belt : MonoBehaviour
     GameObject[] game = new GameObject[100];
 
 
-    [SerializeField] GameObject p;
+    [SerializeField] GameObject beltPrefab;
 
 
     [SerializeField] Gear[] Gears;
@@ -61,6 +61,8 @@ public class Belt : MonoBehaviour
         public float radius = 1;
         public int power;
         public int beltPower;
+
+        public GameObject gear;
     }
     int gearsListCount = 0;
 
@@ -115,6 +117,10 @@ public class Belt : MonoBehaviour
                 Gears[gearsListCount].pos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
                                                camera.ScreenToWorldPoint(Input.mousePosition).y,
                                                0);
+                Gears[gearsListCount].radius = hit2d.collider.gameObject.GetComponent<GearState>().gearPower;
+
+                Gears[gearsListCount].gear = hit2d.collider.gameObject;
+
                 gearsListCount++;
 
                 if (gearsListCount == 2)
@@ -129,7 +135,7 @@ public class Belt : MonoBehaviour
         { 
             case BeltState.PREPARATION:
                 GearStatus2();
-                Debug.Log("b");
+                PowerConnect();
                 break;
 
             case BeltState.SPIN:
@@ -338,7 +344,6 @@ public class Belt : MonoBehaviour
         for (int i = 0; i < Gears.Length; i++)
         {
 
-            Debug.Log("lain");
             int iNext = i + 1;
             //int iPrev = i - 1;
 
@@ -571,7 +576,7 @@ public class Belt : MonoBehaviour
 
             Vector3 rotation = new Vector3(0, 0, -rot + 90f);
 
-            beltPoints[nowBeltPointNumber].game = Instantiate(p, line.GetPosition(nowBeltPointNumber), Quaternion.Euler(rotation));
+            beltPoints[nowBeltPointNumber].game = Instantiate(beltPrefab, line.GetPosition(nowBeltPointNumber), Quaternion.Euler(rotation));
         }
 
 
@@ -711,7 +716,6 @@ public class Belt : MonoBehaviour
 
             beltPoints[i].game.transform.rotation = Quaternion.Euler(rotation);
 
-            Debug.Log("数"　+ i + ":    " + "数"　+ i);
         }
     }
 
@@ -720,12 +724,12 @@ public class Belt : MonoBehaviour
     {
         for (int i = 0; i < Gears.Length; i++)
         {
-            beltPower += Gears[i].power;
+            beltPower += Gears[i].gear.GetComponent<GearState>().gearPower;
         }
 
         for(int i = 0; i < Gears.Length; i++)
         {
-            Gears[i].beltPower = beltPower;
+            Gears[i].gear.GetComponent<GearState>().beltPower = beltPower;
         }
     }
 }
