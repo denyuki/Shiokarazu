@@ -13,6 +13,10 @@ public class GameDirectorDragAndDrop : MonoBehaviour
 
     [SerializeField] GameObject ItemPrefab;
 
+    [SerializeField] StartGenerator startGenerator;
+
+    Belt belt;
+
     Vector3 startPosition;
 
     ////////////////////////////////////////////////////////////
@@ -63,6 +67,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     {
 
         oil = GetComponent<Oil>();
+        belt = GetComponent<Belt>();
+
         ////////////////////////////////////////////////////////////
         
         //ここから巣原が記述
@@ -95,7 +101,12 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         if (oilCheck)
         {
             oil.OilUpdate();
+
+            startGenerator.powrUp = oil.push;
+            
         }
+
+        //belt.belt = oilCheck;
     }
 
 
@@ -161,9 +172,13 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 dragAndDrop = DragAndDrop.OBJECT_DRAG;
             }
             //アイテム工場だったらアイテムを生成
-            else if (hit2d && hit2d.collider.gameObject.tag == Common.ItemFactory)
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.OilFactory)
             {
                 oilCheck = true;
+            }
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory)
+            {
+                belt.belt = true;
             }
             ////////////////////////////////////////////////////////////
 

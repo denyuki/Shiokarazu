@@ -7,6 +7,8 @@ public class Oil : MonoBehaviour
     float decreaseTime = 0.5f;
     int hp = 100;
 
+    public bool push = false;
+
     AudioSource audioSource;
 
     [SerializeField] Texture2D texture;
@@ -57,10 +59,12 @@ public class Oil : MonoBehaviour
         {
             case OilState.NOEMAL:
                 Nomal();
+                push = false;
                 //Sound();
                 break;
             case OilState.PUSH:
                 Push();
+                push = true;
                 break;
 
         }

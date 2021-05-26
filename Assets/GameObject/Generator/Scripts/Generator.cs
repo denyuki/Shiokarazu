@@ -59,6 +59,7 @@ public class Generator : MonoBehaviour
             }
         }
 
+        
         nowPower += gear.gearList[count].gearPower;
         Debug.Log("nowPower"+ nowPower);
 
