@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class GearState : MonoBehaviour
 {
+    public int radius = 0;
+
+
     //ギアの状態
     public enum State
     {
@@ -189,9 +192,9 @@ public class GearState : MonoBehaviour
             //最初のドラッグも無効にする
             if (this.toFirstDrag)
             {
-                Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
+                //Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
 
-                Debug.Break();
+                //Debug.Break();
 
                 return;
             }
@@ -209,7 +212,7 @@ public class GearState : MonoBehaviour
         //つながっている歯車の情報を持つ
         if (collision.gameObject.tag == Common.Gear ||collision.gameObject.tag == Common.StageGear)
         {
-            Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
+            //Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
 
             bool addList = true;
             for (int i = 0; i < gearList.Count; ++i)
@@ -408,7 +411,7 @@ public class GearState : MonoBehaviour
         gearState = collision.gameObject.GetComponent<GearState>();
         
         this.receivePower = gearState.ReturnGearReceivePower();
-        Debug.LogError("receivePower" + this.receivePower + " " + gameObject.name);
+        //Debug.LogError("receivePower" + this.receivePower + " " + gameObject.name);
     }
     
 

@@ -67,9 +67,6 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     Oil oil;
     Belt belt;
 
-    bool oilCheck = false;
-    bool beltCheck = false;
-
     //ここまで巣原が記述
 
     ////////////////////////////////////////////////////////////
@@ -125,12 +122,6 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 break;
         }
 
-        if (oilCheck)
-        {
-            oil.OilUpdate();
-        }
-
-        belt.belt = beltCheck;
     }
 
 
@@ -304,10 +295,31 @@ public class GameDirectorDragAndDrop : MonoBehaviour
             //アイテム工場だったらアイテムを生成
             else if (hit2d && hit2d.collider.gameObject.tag == Common.OilFactory)
             {
-                oilCheck = true;
+                if (!oil.oil)
+                {
+                    oil.CursorChange();
+                    oil.oil = true;
+
+                }
+                else if (oil.oil)
+                {
+                    oil.CursorChangeNormal();
+                    oil.oil = false;
+                }
             }
             else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory){
-                beltCheck = true;
+
+                if (!belt.belt)
+                {
+                    belt.BeltFalse();
+                    belt.CursorChange();
+                    belt.belt = true;
+
+                }else if (belt.belt)
+                {
+                    belt.CursorChangeNormal();
+                    belt.belt = false;
+                }
             }
             ////////////////////////////////////////////////////////////
 
@@ -356,7 +368,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     //オブジェクを置く
     void Drop(bool a = true)
     {
-        Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
+        //Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
 
         GearState gearState = dragAndDropObject.GetComponent<GearState>();
         gearState.IsDrag(false);

@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Oil : MonoBehaviour
 {
+
+    public bool oil = false;
+
     float decreaseTime = 0.5f;
     int hp = 100;
 
@@ -51,27 +55,24 @@ public class Oil : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-
-    public void OilUpdate()
-    {
-
-        switch (oilState)
+        if (oil)
         {
-            case OilState.NOEMAL:
-                Nomal();
-                push = false;
-                //Sound();
-                break;
-            case OilState.PUSH:
-                Push();
-                push = true;
-                break;
+            switch (oilState)
+            {
+                case OilState.NOEMAL:
+                    Nomal();
+                    push = false;
+                    //Sound();
+                    break;
+                case OilState.PUSH:
+                    Push();
+                    push = true;
+                    break;
 
+            }
         }
     }
+
 
     void Nomal()
     {
@@ -80,7 +81,6 @@ public class Oil : MonoBehaviour
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
 
-            //ギアだったらそのまま移動へ
             if (hit2d.collider != null && hit2d.collider.gameObject.tag == Common.StartGenerate)
             {
                 //かける音を鳴らす
@@ -106,7 +106,7 @@ public class Oil : MonoBehaviour
 
             //Debug.Log(hp);
 
-            uIManager.GetComponent<UIManager>().timeLimit += Time.deltaTime * 100;
+            uIManager.GetComponent<UIManager>().timeLimit += Time.deltaTime * 1000;
         }
 
 
@@ -171,15 +171,17 @@ public class Oil : MonoBehaviour
         }
       */
 
-        
+
     }
 
-    public void CursorChange() {
+    public void CursorChange()
+    {
 
         pastMousePos = new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,
                            camera.ScreenToWorldPoint(Input.mousePosition).y);
 
         Cursor.SetCursor(texture, Vector2.zero, CursorMode.Auto);
+
     }
 
     public void CursorChangeNormal()
@@ -187,5 +189,4 @@ public class Oil : MonoBehaviour
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 
     }
-
 }

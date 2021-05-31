@@ -271,6 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DragAndDrop: 0
+  fixedGear: 0
 --- !u!114 &2759000637583296652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ff6071293e65f4bbd7e44ba1840932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 3
   gearPower: 3
   beforeGear: {fileID: 0}
   startGear: 0

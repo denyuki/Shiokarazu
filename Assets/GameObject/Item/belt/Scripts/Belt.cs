@@ -11,6 +11,7 @@ public class Belt : MonoBehaviour
 
     [SerializeField] Camera camera;
 
+    [SerializeField] Texture2D texture;
 
     public bool belt = false;
 
@@ -106,33 +107,12 @@ public class Belt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonUp(0) && gearsListCount != 2 && belt)
+            switch (beltState)
         {
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
+            case BeltState.NOLMAL:
+                GearSet();
+                break;
 
-            //ギアだったらそのまま移動へ
-            if (hit2d.collider.gameObject.tag == Common.Gear)
-            {
-                Gears[gearsListCount].pos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
-                                               camera.ScreenToWorldPoint(Input.mousePosition).y,
-                                               0);
-                Gears[gearsListCount].radius = hit2d.collider.gameObject.GetComponent<GearState>().gearPower;
-
-                Gears[gearsListCount].gear = hit2d.collider.gameObject;
-
-                gearsListCount++;
-
-                if (gearsListCount == 2)
-                {
-                    beltState = BeltState.PREPARATION;
-                }
-            }
-        }
-
-
-        switch (beltState)
-        { 
             case BeltState.PREPARATION:
                 GearStatus2();
                 PowerConnect();
@@ -143,6 +123,36 @@ public class Belt : MonoBehaviour
                 break;
         }
        
+    }
+
+    void GearSet()
+    {
+        if (Input.GetMouseButtonUp(0) && belt)
+        {
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
+
+            if (hit2d.collider != null && (beltState == BeltState.NOLMAL && hit2d.collider.gameObject.tag == Common.Gear || hit2d.collider.gameObject.tag == Common.StageGear))
+            {
+                if (Gears[gearsListCount].gear != hit2d.collider.gameObject)
+                {
+                    Gears[gearsListCount].pos = new Vector3(camera.ScreenToWorldPoint(Input.mousePosition).x,
+                                                   camera.ScreenToWorldPoint(Input.mousePosition).y,
+                                                   0);
+                    Gears[gearsListCount].radius = hit2d.collider.gameObject.GetComponent<GearState>().radius / 2f;
+
+                    Gears[gearsListCount].gear = hit2d.collider.gameObject;
+
+                    gearsListCount++;
+
+                    if (gearsListCount == 2)
+                    {
+                        beltState = BeltState.PREPARATION;
+                    }
+                }
+            }
+
+        }
     }
 
 
@@ -214,6 +224,7 @@ public class Belt : MonoBehaviour
         }
         BeltPointSet();
     }
+
     /*
     void GearStatus()
     {
@@ -741,5 +752,39 @@ public class Belt : MonoBehaviour
         {
             Gears[i].gear.GetComponent<GearState>().beltPower = beltPower;
         }
+    }
+
+    public void CursorChange()
+    {
+
+        Cursor.SetCursor(texture, Vector2.zero, CursorMode.Auto);
+
+    }
+
+    public void CursorChangeNormal()
+    {
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+
+    }
+
+    public void BeltFalse()
+    {
+
+        for (int i = 0; i < Gears.Length; i++)
+        {
+            if (Gears[i].pos != Vector3.zero)
+            {
+                Gears[i].gear.GetComponent<GearState>().beltPower = 0;
+            }
+        }
+
+        for (int i = 0; i < beltPoints.Length; i++)
+        {
+            Destroy(beltPoints[i].game);
+        }
+
+        beltState = BeltState.NOLMAL;
+         gearsListCount = 0;
+
     }
 }
