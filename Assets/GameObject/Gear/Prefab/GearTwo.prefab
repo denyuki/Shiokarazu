@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6302436206238742121}
   - component: {fileID: 6302436206238738832}
   - component: {fileID: 6302436206238742127}
+  - component: {fileID: -5042114310465136995}
   m_Layer: 0
   m_Name: GearTwo
   m_TagString: Gear
@@ -291,6 +292,23 @@ MonoBehaviour:
   totalPower: 0
   receivePower: 0
   beltPower: 0
+  toFirstDrag: 1
+--- !u!58 &-5042114310465136995
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6302436206238742120}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.00000059604645, y: 0}
+  serializedVersion: 2
+  m_Radius: 5.2462535
 --- !u!1001 &760229731682178856
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -464,9 +464,11 @@ GameObject:
   - component: {fileID: 274183384}
   - component: {fileID: 274183386}
   - component: {fileID: 274183383}
+  - component: {fileID: 274183387}
+  - component: {fileID: 274183388}
   m_Layer: 0
   m_Name: Generator
-  m_TagString: Untagged
+  m_TagString: Generator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -484,9 +486,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.1575756}
+  m_Offset: {x: -0.11595249, y: 0.1575756}
   serializedVersion: 2
-  m_Radius: 4.669807
+  m_Radius: 5.4041696
 --- !u!212 &274183384
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -544,13 +546,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274183382}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.78, y: -1.12, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.62125975, y: 0.33426493, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
-  m_Children:
-  - {fileID: 2059806628}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Children: []
+  m_Father: {fileID: 2059806628}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &274183386
 MonoBehaviour:
@@ -565,6 +566,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clearPower: 5
+  gearState: {fileID: 0}
+  gearTouch: {fileID: 0}
+  gearstate: []
+--- !u!50 &274183387
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 274183382}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &274183388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 274183382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 784e9bc8d9437b74abf517e0cdebae15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedRot: {x: 0, y: 0, z: 30}
+  values: 5
 --- !u!1 &295681234
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,6 +810,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5044bad95fe3854085d669af8b80e0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GearOneSwitch: {fileID: 2106555104}
+  GearOneText: {fileID: 1797759397}
+  GearTwoSwitch: {fileID: 130640576}
+  GearTwoText: {fileID: 1873249297}
+  GearThreeSwitch: {fileID: 492461664}
+  GearThreeText: {fileID: 1897252683}
 --- !u!1 &387047324
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,9 +850,9 @@ BoxCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
-    border: {x: 0.049999997, y: 0.049999997, z: 0.049999997, w: 0.049999997}
+    border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 1.85, y: 2.53}
     newSize: {x: 0.16, y: 0.16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -855,7 +900,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300040, guid: 34ecf51bcd3f4424eafda7dafd885bd0, type: 3}
   m_Color: {r: 1, g: 0.93099, b: 0.5896226, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -874,8 +919,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387047324}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.06, y: 0.42, z: 1}
-  m_LocalScale: {x: 10, y: 30, z: 1}
+  m_LocalPosition: {x: -6.06, y: 0.44, z: 1}
+  m_LocalScale: {x: 1, y: 3, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -987,6 +1032,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clearPower: 9
+  gearState: {fileID: 0}
+  gearTouch: {fileID: 0}
+  gearstate: []
 --- !u!1 &492461664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1667,6 +1715,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 211116772177553335, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
         type: 3}
+      propertyPath: fixedGear
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 211116772177553335, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
+        type: 3}
       propertyPath: DragAndDrop
       value: 0
       objectReference: {fileID: 0}
@@ -1678,6 +1731,11 @@ PrefabInstance:
     - target: {fileID: 211116772177557576, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
         type: 3}
       propertyPath: startGear
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 211116772177557576, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
+        type: 3}
+      propertyPath: toFirstDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 211116772177557577, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
@@ -2041,6 +2099,7 @@ RectTransform:
   - {fileID: 1270993181}
   - {fileID: 623848106}
   - {fileID: 625274039}
+  - {fileID: 2128542298}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2884,7 +2943,7 @@ GameObject:
   - component: {fileID: 2059806628}
   - component: {fileID: 2059806629}
   m_Layer: 0
-  m_Name: New Sprite
+  m_Name: GeneratorParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2897,12 +2956,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059806627}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.22, y: -3.07, z: 0}
-  m_LocalScale: {x: 11.621546, y: 9.184334, z: 1}
-  m_Children: []
-  m_Father: {fileID: 274183385}
-  m_RootOrder: 0
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.5019999, y: -1.427, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 274183385}
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2059806629
 SpriteRenderer:
@@ -3247,9 +3307,9 @@ MonoBehaviour:
   gearOneText: {fileID: 1797759397}
   gearOneNum: 5
   gearTwoText: {fileID: 1873249297}
-  gearTwoNum: 0
+  gearTwoNum: 5
   gearThreeText: {fileID: 1897252683}
-  gearThreeNum: 0
+  gearThreeNum: 5
   UIManager: {fileID: 1424864305}
   itemLayerMask:
     serializedVersion: 2
@@ -3285,6 +3345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generator: {fileID: 274183386}
+  clearText: {fileID: 2128542297}
 --- !u!114 &2118607891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3380,6 +3441,84 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2128133890}
   m_CullTransparentMesh: 0
+--- !u!1 &2128542297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2128542298}
+  - component: {fileID: 2128542300}
+  - component: {fileID: 2128542299}
+  m_Layer: 5
+  m_Name: ClearText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &2128542298
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128542297}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1178504391}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 272}
+  m_SizeDelta: {x: 800, y: 400}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2128542299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128542297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5586208, g: 0.9245283, b: 0.53640085, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 239
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 239
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: CLEAR
+--- !u!222 &2128542300
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128542297}
+  m_CullTransparentMesh: 0
 --- !u!1001 &211116771321214903
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3387,6 +3526,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 295681236}
     m_Modifications:
+    - target: {fileID: 211116772177553335, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
+        type: 3}
+      propertyPath: fixedGear
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 211116772177557576, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
         type: 3}
       propertyPath: gearPower
@@ -3396,6 +3540,11 @@ PrefabInstance:
         type: 3}
       propertyPath: startGear
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 211116772177557576, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
+        type: 3}
+      propertyPath: toFirstDrag
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 211116772177557577, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
         type: 3}
@@ -3497,6 +3646,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: cogs_14
+      objectReference: {fileID: 0}
+    - target: {fileID: 211116772177557583, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Gear
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3200bf9d90d11094a87a8b4a7c7bfb1a, type: 3}
