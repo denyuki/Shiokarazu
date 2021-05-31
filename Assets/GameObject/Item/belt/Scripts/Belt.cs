@@ -143,7 +143,6 @@ public class Belt : MonoBehaviour
                 break;
         }
        
-
     }
 
 
@@ -361,7 +360,8 @@ public class Belt : MonoBehaviour
 
             float a = Mathf.Sqrt(Mathf.Pow(Gears[i].point5.x, 2) + Mathf.Pow(Gears[i].point5.y, 2));
             float b = Mathf.Sqrt(Mathf.Pow(Gears[i].point6.x, 2) + Mathf.Pow(Gears[i].point6.y, 2));
-            float angle = Mathf.Acos(((Gears[i].point5.x * Gears[i].point6.x + Gears[i].point5.y * Gears[i].point6.y) / (a * b))) * Mathf.Rad2Deg;
+            //float angle = Mathf.Acos(((Gears[i].point5.x * Gears[i].point6.x + Gears[i].point5.y * Gears[i].point6.y) / (a * b))) * Mathf.Rad2Deg;
+            float angle = Mathf.Acos(((Gears[beltPoints[i].gearNumber].point5.x * Gears[beltPoints[i].gearNumber].point6.x + Gears[beltPoints[i].gearNumber].point5.y * Gears[beltPoints[i].gearNumber].point6.y) / (a * b))) * Mathf.Rad2Deg;
 
 
             //点の間隔
@@ -661,6 +661,16 @@ public class Belt : MonoBehaviour
 
 
                 beltPoints[i].game.transform.position = new Vector3(x + Gears[gearNumber].pos.x, y + Gears[gearNumber].pos.y, 0);
+
+
+
+
+                float rot = Mathf.Atan2(nextgameObje.transform.position.x - nowgameObje.transform.position.x, nextgameObje.transform.position.y - nowgameObje.transform.position.y) * Mathf.Rad2Deg;
+
+                Vector3 rotation = new Vector3(0, 0, -rot + 90f);
+
+
+                beltPoints[i].game.transform.rotation = Quaternion.Euler(rotation);
             }
             else
             {
@@ -705,16 +715,16 @@ public class Belt : MonoBehaviour
                     beltPoints[i].moveCountDown = angle;
 
                 }
+
+
+
+                float rot = Mathf.Atan2(endPos.x - startPos.x, endPos.y - startPos.y) * Mathf.Rad2Deg;
+
+                Vector3 rotation = new Vector3(0, 0, -rot + 90f);
+
+
+                beltPoints[i].game.transform.rotation = Quaternion.Euler(rotation);
             }
-
-
-
-            float rot = Mathf.Atan2(nextgameObje.transform.position.x - nowgameObje.transform.position.x, nextgameObje.transform.position.y - nowgameObje.transform.position.y) * Mathf.Rad2Deg;
-
-            Vector3 rotation = new Vector3(0, 0, -rot + 90f);
-
-
-            beltPoints[i].game.transform.rotation = Quaternion.Euler(rotation);
 
         }
     }
