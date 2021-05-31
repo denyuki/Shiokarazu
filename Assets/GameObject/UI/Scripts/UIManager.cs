@@ -49,6 +49,17 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     GameObject startText;
 
+    [SerializeField]
+    GameObject stageGearText;
+    Text stageGearPower;
+
+    [SerializeField] GameObject directorState;
+    GameDirectorState director;
+
+    [SerializeField] string gameOverName;
+
+    [SerializeField] GameObject GameOverText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,6 +74,11 @@ public class UIManager : MonoBehaviour
         Invoke("StartTextOff", 2f);
 
         this.MaxLimit = this.timeLimit;
+
+        this.stageGearPower = stageGearText.GetComponent<Text>();
+        this.stageGearText.SetActive(false);
+
+        this.director = this.directorState.GetComponent<GameDirectorState>();
     }
 
     // Update is called once per frame
@@ -80,7 +96,25 @@ public class UIManager : MonoBehaviour
             this.timeLimit -= Time.deltaTime;
             this.timerImage.fillAmount = this.timeLimit / this.MaxLimit;
         }
+        else
+        {
+            this.GameOverText.SetActive(true);
 
+            Invoke("Change", 2.0f);
+        }
+
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
+
+        if(hit2d.collider.gameObject.tag == Common.StageGear)
+        {
+            this.stageGearText.SetActive(true);
+            this.stageGearPower.text = " " + hit2d.collider.gameObject.GetComponent<GearState>().ReturnGearReceivePower();
+        }
+        else
+        {
+            this.stageGearText.SetActive(false);
+        }
     }
 
     public void MoveNumPlus()
@@ -120,5 +154,10 @@ public class UIManager : MonoBehaviour
     void StartTextOff()
     {
         this.startText.SetActive(false);
+    }
+
+    void Change()
+    {
+        this.director.ChangeScene(this.gameOverName);
     }
 }
