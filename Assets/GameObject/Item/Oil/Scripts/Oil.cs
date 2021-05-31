@@ -107,8 +107,6 @@ public class Oil : MonoBehaviour
             //Debug.Log(hp);
 
             uIManager.GetComponent<UIManager>().timeLimit += Time.deltaTime * 100;
-
-            Debug.Log("11111");
         }
 
 
