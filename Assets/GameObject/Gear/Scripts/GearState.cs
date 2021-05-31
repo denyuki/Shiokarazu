@@ -45,7 +45,12 @@ public class GearState : MonoBehaviour
     //ベルトから力を受け取る用の変数
     public float beltPower = 0;
 
+
+    //ドラッグしている間はギアのリストに追加されないようにするための変数
     bool isDrag = false;
+
+    //生成してから最初のドラッグでもギアのリストに追加されないようにするための変数
+    public bool toFirstDrag = false;
 
     // Start is called before the first frame update
     void Start()
@@ -148,18 +153,6 @@ public class GearState : MonoBehaviour
             }
         }
 
-        /*
-        for(int i = 0; i < this.receivePowerList.Count; ++i)
-        {
-            this.totalPower += this.receivePowerList[i].gearPower;
-        }
-
-        for(int i = 0;i < this.receivePowerList.Count; ++i)
-        {
-            this.percentOfReceivePower.Add(MathReceivePower(this.totalPower, this.receivePowerList[i].gearPower));
-        }
-        */
-
         for(int i = 0;i < this.receivePowerList.Count; ++i)
         {
             //this.receivePowerList[i].GearReceivePower(this.percentOfReceivePower[i]);
@@ -181,17 +174,43 @@ public class GearState : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == Common.Gear)
+        if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
         {
-            if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            //ドラッグ中はつながる判定にならないようにする
+            if (this.IsDrag())
+            {
+                return;
+            }
+            else if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            {
+                return;
+            }
+
+            //最初のドラッグも無効にする
+            if (this.toFirstDrag)
+            {
+                Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
+
+                Debug.Break();
+
+                return;
+            }
+            else if (collision.gameObject.GetComponent<GearState>().toFirstDrag)
             {
                 return;
             }
         }
 
+        //IsCollision(collision);
+
+        //collision.gameObject.GetComponent<GearState>().IsCollision(gameObject.GetComponent<Collision2D>());
+
+        
         //つながっている歯車の情報を持つ
         if (collision.gameObject.tag == Common.Gear ||collision.gameObject.tag == Common.StageGear)
         {
+            Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
+
             bool addList = true;
             for (int i = 0; i < gearList.Count; ++i)
             {
@@ -215,7 +234,7 @@ public class GearState : MonoBehaviour
                     {
                         if (gearList[j].getGearDistance < min)
                         {
-                            if(!(gearList[j].gameObject.tag == Common.StageGear && gearList[j].getGearDistance == 0))
+                            if(!(gearList[j].getGearDistance == 0))
                             {
                                 min = gearList[j].getGearDistance;
                             }
@@ -230,13 +249,33 @@ public class GearState : MonoBehaviour
             }
         }
 
+        if (collision.gameObject.tag == Common.Generator)
+        {
+            collision.gameObject.GetComponent<Generator>().GearConnect();
+        }
+        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == Common.Gear)
+        if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
         {
-            if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            //ドラッグ中はつながる判定にならないようにする
+            if (this.IsDrag())
+            {
+                return;
+            }
+            else if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            {
+                return;
+            }
+
+            //最初のドラッグも無効にする
+            if (this.toFirstDrag)
+            {
+                return;
+            }
+            else if (collision.gameObject.GetComponent<GearState>().toFirstDrag)
             {
                 return;
             }
@@ -256,22 +295,39 @@ public class GearState : MonoBehaviour
     
     void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == Common.Gear)
+        if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
         {
-            if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            //ドラッグ中はつながる判定にならないようにする
+            if (this.IsDrag())
+            {
+                return;
+            }
+            else if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            {
+                return;
+            }
+
+            //最初のドラッグも無効にする
+            if (this.toFirstDrag)
+            {
+                return;
+            }
+            else if (collision.gameObject.GetComponent<GearState>().toFirstDrag)
             {
                 return;
             }
         }
+        
 
-        //ドラッグされている最中は処理を行わない
-        if (this.isDrag)
+        IsCollider(collision);
+
+        if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
         {
-            return;
+            collision.gameObject.GetComponent<GearState>().IsCollider(gameObject.GetComponent<Collider2D>());
         }
-
+        /*
         //つながっている歯車の情報を持つ
-        if(collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
+        if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
         {
             bool addList = true;
             for(int i = 0; i < gearList.Count; ++i)
@@ -309,35 +365,50 @@ public class GearState : MonoBehaviour
                 Debug.Log(this.gearDistance);
             } 
         }
-        
+        */
+
+        if (collision.gameObject.tag == Common.Generator)
+        {
+            collision.gameObject.GetComponent<Generator>().GearConnect();
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == Common.Gear)
+        if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
         {
-            if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            //ドラッグ中はつながる判定にならないようにする
+            if (this.IsDrag())
+            {
+                return;
+            }
+            else if (collision.gameObject.GetComponent<GearState>().IsDrag())
+            {
+                return;
+            }
+
+            //最初のドラッグも無効にする
+            if (this.toFirstDrag)
+            {
+                return;
+            }
+            else if (collision.gameObject.GetComponent<GearState>().toFirstDrag)
             {
                 return;
             }
         }
 
-        //ドラッグされている最中は処理を行わない
-        if (this.isDrag)
-        {
-            return;
-        }
-
+        
         GearState gearState;
 
         if(!(collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear))
         {
             return;
         }
-
         gearState = collision.gameObject.GetComponent<GearState>();
         
         this.receivePower = gearState.ReturnGearReceivePower();
+        Debug.LogError("receivePower" + this.receivePower + " " + gameObject.name);
     }
     
 
@@ -481,5 +552,91 @@ public class GearState : MonoBehaviour
     public bool IsDrag()
     {
         return this.isDrag;
+    }
+
+    public void IsCollision(Collision2D collision)
+    {
+        //つながっている歯車の情報を持つ
+        if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
+        {
+            bool addList = true;
+            for (int i = 0; i < gearList.Count; ++i)
+            {
+                //Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
+                if (gearList[i].gameObject == collision.gameObject)
+                {
+                    addList = false;
+                    break;
+                }
+            }
+
+            if (addList)
+            {
+                gearList.Add(collision.gameObject.GetComponent<GearState>());
+
+                if (!this.startGear)
+                {
+                    int min = 100;
+
+                    for (int j = 0; j < gearList.Count; ++j)
+                    {
+                        if (gearList[j].getGearDistance < min)
+                        {
+                            if (!(gearList[j].gameObject.tag == Common.StageGear && gearList[j].getGearDistance == 0))
+                            {
+                                min = gearList[j].getGearDistance;
+                            }
+
+                        }
+                    }
+                    Debug.LogError(collision.gameObject.name);
+                    this.gearDistance = min + 1;
+                }
+
+                Debug.Log(this.gearDistance);
+            }
+        }
+    }
+
+    public void IsCollider(Collider2D collision)
+    {
+        if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
+        {
+            bool addList = true;
+            for (int i = 0; i < gearList.Count; ++i)
+            {
+                //Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
+                if (gearList[i].gameObject == collision.gameObject)
+                {
+                    addList = false;
+                    break;
+                }
+            }
+
+            if (addList)
+            {
+                gearList.Add(collision.gameObject.GetComponent<GearState>());
+
+                if (!this.startGear)
+                {
+                    int min = 100;
+
+                    for (int j = 0; j < gearList.Count; ++j)
+                    {
+                        if (gearList[j].getGearDistance < min)
+                        {
+                            if (!(gearList[j].gameObject.tag == Common.StageGear && gearList[j].getGearDistance == 0))
+                            {
+                                min = gearList[j].getGearDistance;
+                            }
+                        }
+                    }
+
+                    this.gearDistance = min + 1;
+                }
+
+                Debug.Log(this.gearDistance);
+            }
+        }
     }
 }

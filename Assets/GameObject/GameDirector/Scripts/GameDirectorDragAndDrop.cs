@@ -229,10 +229,10 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                     ////////////////////////////////////////////////////////////
 
                     dragAndDrop = DragAndDrop.OBJECT_DRAG;
-                    dragAndDrop = DragAndDrop.OBJECT_DROP;
-                    Drop(false);
+                    //dragAndDrop = DragAndDrop.OBJECT_DROP;
+                    //Drop(false);
                     
-                    dragAndDrop = DragAndDrop.OBJECT_DRAG;
+                    //dragAndDrop = DragAndDrop.OBJECT_DRAG;
                 }
 
                 
@@ -356,8 +356,11 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     //オブジェクを置く
     void Drop(bool a = true)
     {
+        Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
+
         GearState gearState = dragAndDropObject.GetComponent<GearState>();
         gearState.IsDrag(false);
+        gearState.toFirstDrag = false;
 
         dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = false;
         dragAndDrop = DragAndDrop.OBJECT_GET;
@@ -365,6 +368,9 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         ////////////////////////////////////////////////////////////
 
         //ここから巣原が記述
+
+        CircleCollider2D circle = dragAndDropObject.GetComponent<CircleCollider2D>();
+        circle.enabled = true; 
 
         dragAndDropObject.GetComponent<GearTouch>().CanRotateGear();
 

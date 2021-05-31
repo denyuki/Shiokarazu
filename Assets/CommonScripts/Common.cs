@@ -14,6 +14,7 @@ public class Common
     public const string GearThreeFactory = "GearThreeFactory";
     public const string OilFactory = "OilFactory";
     public const string BeltFactory = "BeltFactory";
+    public const string Generator = "Generator";
 
     public const string LightningStart = "LightningStart";
     public const string LightningEnd = "LightningEnd";

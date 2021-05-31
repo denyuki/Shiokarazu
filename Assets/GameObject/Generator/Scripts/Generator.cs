@@ -10,8 +10,10 @@ public class Generator : MonoBehaviour
     int nowPower = 0;
 
     //触れているギアの情報
-    GearState gearState = null;
-    GearTouch gearTouch = null;
+    public GearState gearState = null;
+    public GearTouch gearTouch = null;
+
+    public List<GearState> gearstate;
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +34,6 @@ public class Generator : MonoBehaviour
 
         if (gearState != null && !gearTouch.DragAndDrop)
         {
-
             return ConnectChase(gearState);
         }else
         {
@@ -43,11 +44,20 @@ public class Generator : MonoBehaviour
     //ギアが繋がっていてクリアしているか（再起関数）
     bool ConnectChase(GearState gear)
     {
+        //Debug.Break();
+
         Debug.LogWarning("1");
 
         int geraDistance = gear.getGearDistance;
 
-        int distance = gear.gearList[0].getGearDistance;
+        int distance = 0;
+
+        if (!(gear.gearList.Count == 0))
+        {
+            distance = gear.gearList[0].getGearDistance;
+        }
+
+        
         int count = 0;
 
         Debug.LogWarning(gear.gearList.Count + "GearListCount");
@@ -60,15 +70,17 @@ public class Generator : MonoBehaviour
                 count = i;
             }
         }
+        //Debug.Break();
 
         nowPower += gear.gearList[count].gearPower;
-        Debug.Log("nowPower"+ nowPower + " ClearPower" + clearPower + " GearDistance" + geraDistance);
+        Debug.LogWarning("nowPower"+ nowPower + " ClearPower" + clearPower + " GearDistance" + geraDistance);
 
         //ジェネレーターとつながっているか
         if (geraDistance == 0)
         {
             if (clearPower == nowPower)
             {
+
                 //クリア
                 return true;
             }
@@ -84,10 +96,17 @@ public class Generator : MonoBehaviour
         return ConnectChase(gear.gearList[count]);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == Common.Gear)
+        {
+            gearState = collision.gameObject.GetComponent<GearState>();
+            gearTouch = collision.gameObject.GetComponent<GearTouch>();
+        }
+    }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
-        
-
         if (collision.gameObject.tag == Common.Gear)
         {
             gearState = collision.gameObject.GetComponent<GearState>();
@@ -105,11 +124,17 @@ public class Generator : MonoBehaviour
         }
     }
 
-    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == Common.Gear)
+        {
+            gearState = collision.gameObject.GetComponent<GearState>();
+            gearTouch = collision.gameObject.GetComponent<GearTouch>();
+        }
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
-        
-
         if (collision.gameObject.tag == Common.Gear)
         {
             gearState = collision.gameObject.GetComponent<GearState>();

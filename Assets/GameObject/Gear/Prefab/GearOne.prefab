@@ -16,8 +16,9 @@ GameObject:
   - component: {fileID: 211116772177557582}
   - component: {fileID: 211116772177553335}
   - component: {fileID: 211116772177557576}
+  - component: {fileID: -8048050200220840200}
   m_Layer: 0
-  m_Name: cogs_14
+  m_Name: GearOne
   m_TagString: Gear
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -291,6 +292,23 @@ MonoBehaviour:
   totalPower: 0
   receivePower: 0
   beltPower: 0
+  toFirstDrag: 1
+--- !u!58 &-8048050200220840200
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211116772177557583}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.04208803, y: 0}
+  serializedVersion: 2
+  m_Radius: 5.288349
 --- !u!1001 &6851146194831661327
 PrefabInstance:
   m_ObjectHideFlags: 0

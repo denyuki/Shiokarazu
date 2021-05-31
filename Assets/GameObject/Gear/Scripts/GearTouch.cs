@@ -17,6 +17,8 @@ public class GearTouch : MonoBehaviour
 
     int distance = 0;
 
+    [SerializeField] bool fixedGear = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,22 +46,25 @@ public class GearTouch : MonoBehaviour
     {
         if (!DragAndDrop)
         {
+            if(!this.fixedGear)
+            {
+                Vector3 nearGearPosition = collision.transform.position;
+                Vector3 gearPosition = transform.position;
 
-            Vector3 nearGearPosition = collision.transform.position;
-            Vector3 gearPosition = transform.position;
+                Vector3 gearVector = gearPosition - nearGearPosition;
 
-            Vector3 gearVector = gearPosition - nearGearPosition;
+                SpriteRenderer spriteRendererOther = collision.gameObject.GetComponent<SpriteRenderer>();
 
-            SpriteRenderer spriteRendererOther = collision.gameObject.GetComponent<SpriteRenderer>();
+                float sum = (this.spriteRenderer.bounds.size.x + spriteRendererOther.bounds.size.x) / 3;
 
-            float sum = (this.spriteRenderer.bounds.size.x + spriteRendererOther.bounds.size.x) / 3;
+                //ギアの位置を移動する
+                transform.position = collision.transform.position + gearVector.normalized * sum;
 
-            //ギアの位置を移動する
-            transform.position = collision.transform.position + gearVector.normalized * sum;
+                DragAndDrop = true;
 
-            DragAndDrop = true;
-
-            Debug.Log("呼ばれました" + gameObject.name);
+                Debug.Log("呼ばれました" + gameObject.name);
+            }
+            
         }
 
         //StageGearは無条件で回転し始める
@@ -85,21 +90,24 @@ public class GearTouch : MonoBehaviour
         if (!DragAndDrop)
         {
 
-            Vector3 nearGearPosition = collision.transform.position;
-            Vector3 gearPosition = transform.position;
+            if (!this.fixedGear)
+            {
+                Vector3 nearGearPosition = collision.transform.position;
+                Vector3 gearPosition = transform.position;
 
-            Vector3 gearVector = gearPosition - nearGearPosition;
+                Vector3 gearVector = gearPosition - nearGearPosition;
 
-            SpriteRenderer spriteRendererOther = collision.gameObject.GetComponent<SpriteRenderer>();
+                SpriteRenderer spriteRendererOther = collision.gameObject.GetComponent<SpriteRenderer>();
 
-            float sum = (this.spriteRenderer.bounds.size.x + spriteRendererOther.bounds.size.x) / 3;
+                float sum = (this.spriteRenderer.bounds.size.x + spriteRendererOther.bounds.size.x) / 3;
 
-            //ギアの位置を移動する
-            transform.position = collision.transform.position + gearVector.normalized * sum;
+                //ギアの位置を移動する
+                transform.position = collision.transform.position + gearVector.normalized * sum;
 
-            DragAndDrop = true;
+                DragAndDrop = true;
 
-            Debug.Log("呼ばれました" + gameObject.name);
+                Debug.Log("呼ばれました" + gameObject.name);
+            }
         }
 
         if (this.canRotate)

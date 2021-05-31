@@ -9,6 +9,8 @@ public class GameDirectorState : MonoBehaviour
 
     GearDirector gearDirector;
 
+    [SerializeField] GameObject clearText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,8 @@ public class GameDirectorState : MonoBehaviour
         if (generator.GearConnect())
         {
             Debug.LogError("クリア");
+
+            this.clearText.SetActive(true);
 
             //電流をオンにする
             this.gearDirector.AllCurrentOn();

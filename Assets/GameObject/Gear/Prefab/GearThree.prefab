@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2759000637583296650}
   - component: {fileID: 2759000637583300467}
   - component: {fileID: 2759000637583296652}
+  - component: {fileID: -1179825435433051478}
   m_Layer: 0
   m_Name: GearThree
   m_TagString: Gear
@@ -282,7 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ff6071293e65f4bbd7e44ba1840932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gearPower: 1
+  gearPower: 3
   beforeGear: {fileID: 0}
   startGear: 0
   gearList: []
@@ -291,6 +292,23 @@ MonoBehaviour:
   totalPower: 0
   receivePower: 0
   beltPower: 0
+  toFirstDrag: 1
+--- !u!58 &-1179825435433051478
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2759000637583296651}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.021042028, y: 0}
+  serializedVersion: 2
+  m_Radius: 5.225209
 --- !u!1001 &8913697653343807947
 PrefabInstance:
   m_ObjectHideFlags: 0
