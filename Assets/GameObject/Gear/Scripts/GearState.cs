@@ -52,6 +52,8 @@ public class GearState : MonoBehaviour
     //生成してから最初のドラッグでもギアのリストに追加されないようにするための変数
     public bool toFirstDrag = false;
 
+    [SerializeField] GameObject gameD;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -86,6 +88,7 @@ public class GearState : MonoBehaviour
             {
                 Debug.LogWarning(gameObject.name + " から削除されたよ " + gearList[i].gameObject.name);
 
+
                 if(this.gearDistance == gearList[i].getGearDistance)
                 {
                     this.gearDistance = 0;
@@ -94,6 +97,12 @@ public class GearState : MonoBehaviour
                 gearList.Remove(gearList[i]);
                 
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            currentPosition();
+            this.gameD.GetComponent<GameDirectorState>().clearText.SetActive(true);
         }
 
     }

@@ -9,7 +9,7 @@ public class GameDirectorState : MonoBehaviour
 
     GearDirector gearDirector;
 
-    [SerializeField] GameObject clearText;
+    public GameObject clearText;
 
     // Start is called before the first frame update
     void Start()
