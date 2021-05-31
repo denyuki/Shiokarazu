@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Slide3 : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class Slide3 : MonoBehaviour
 
     public void OnClick(int number)
     {
-        Debug.Log(number);
+
+        SceneManager.LoadScene("Stage" + number);
     }
 }

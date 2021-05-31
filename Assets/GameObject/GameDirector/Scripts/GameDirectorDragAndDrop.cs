@@ -76,6 +76,7 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         OBJECT_GET,
         OBJECT_DRAG,
         OBJECT_DROP,
+        OBJECT_NULL,
     }
     DragAndDrop dragAndDrop = DragAndDrop.OBJECT_GET;
 
@@ -299,12 +300,14 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 {
                     oil.CursorChange();
                     oil.oil = true;
+                    dragAndDrop = DragAndDrop.OBJECT_NULL;
 
                 }
                 else if (oil.oil)
                 {
                     oil.CursorChangeNormal();
                     oil.oil = false;
+                    dragAndDrop = DragAndDrop.OBJECT_GET;
                 }
             }
             else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory){
@@ -314,11 +317,14 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                     belt.BeltFalse();
                     belt.CursorChange();
                     belt.belt = true;
+                    dragAndDrop = DragAndDrop.OBJECT_NULL;
 
-                }else if (belt.belt)
+                }
+                else if (belt.belt)
                 {
                     belt.CursorChangeNormal();
                     belt.belt = false;
+                    dragAndDrop = DragAndDrop.OBJECT_GET;
                 }
             }
             ////////////////////////////////////////////////////////////

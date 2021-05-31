@@ -106,14 +106,16 @@ public class UIManager : MonoBehaviour
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
 
-        if(hit2d.collider.gameObject.tag == Common.StageGear)
-        {
-            this.stageGearText.SetActive(true);
-            this.stageGearPower.text = " " + hit2d.collider.gameObject.GetComponent<GearState>().ReturnGearReceivePower();
-        }
-        else
-        {
-            this.stageGearText.SetActive(false);
+        if(hit2d.collider != null){
+            if (hit2d.collider.gameObject.tag == Common.StageGear)
+            {
+                this.stageGearText.SetActive(true);
+                this.stageGearPower.text = " " + hit2d.collider.gameObject.GetComponent<GearState>().ReturnGearReceivePower();
+            }
+            else
+            {
+                this.stageGearText.SetActive(false);
+            }
         }
     }
 
