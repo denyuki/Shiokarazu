@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameDirectorState : MonoBehaviour
 {
@@ -9,7 +10,9 @@ public class GameDirectorState : MonoBehaviour
 
     GearDirector gearDirector;
 
-    [SerializeField] GameObject clearText;
+    public  GameObject clearText;
+
+    public string nextScene;
 
     // Start is called before the first frame update
     void Start()
@@ -29,8 +32,20 @@ public class GameDirectorState : MonoBehaviour
 
             //電流をオンにする
             this.gearDirector.AllCurrentOn();
+
+            Invoke("ChangeScene", 2.0f);
         }
 
+    }
+
+    public void ChangeScene()
+    {
+        SceneManager.LoadScene(this.nextScene);
+    }
+
+    public void ChangeScene(string st)
+    {
+        SceneManager.LoadScene(st);
     }
 
 }
