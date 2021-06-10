@@ -70,7 +70,11 @@ public class GearDirector : MonoBehaviour
         {
             this.PowerReceiveList[i].SearchAndReceiveGearPower();
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("Chapter Scene");
+        }
     }
 
     //シーン遷移用の関数

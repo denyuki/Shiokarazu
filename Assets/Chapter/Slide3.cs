@@ -22,6 +22,6 @@ public class Slide3 : MonoBehaviour
     public void OnClick(int number)
     {
 
-        SceneManager.LoadScene("Stage" + number);
+        SceneManager.LoadScene("Stage " + number);
     }
 }

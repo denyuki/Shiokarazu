@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Slide1 : MonoBehaviour
 {
@@ -22,7 +23,14 @@ public class Slide1 : MonoBehaviour
 
     public void OnClick(int number)
     {
-        sliderGameObject.active = true;
-        sliderAnimator.SetBool("Slider", true);
+        if (number == 0)
+        {
+            sliderGameObject.active = true;
+            sliderAnimator.SetBool("Slider", true);
+        }
+        else
+        {
+            SceneManager.LoadScene("ruka");
+        }
     }
 }

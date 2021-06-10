@@ -294,37 +294,35 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 
             }
             //アイテム工場だったらアイテムを生成
+
             else if (hit2d && hit2d.collider.gameObject.tag == Common.OilFactory)
             {
                 if (!oil.oil)
                 {
                     oil.CursorChange();
                     oil.oil = true;
-                    dragAndDrop = DragAndDrop.OBJECT_NULL;
 
                 }
                 else if (oil.oil)
                 {
                     oil.CursorChangeNormal();
                     oil.oil = false;
-                    dragAndDrop = DragAndDrop.OBJECT_GET;
                 }
             }
-            else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory){
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory)
+            {
 
                 if (!belt.belt)
                 {
-                    belt.BeltFalse();
                     belt.CursorChange();
                     belt.belt = true;
-                    dragAndDrop = DragAndDrop.OBJECT_NULL;
 
                 }
                 else if (belt.belt)
                 {
                     belt.CursorChangeNormal();
+                    belt.BeltFalse();
                     belt.belt = false;
-                    dragAndDrop = DragAndDrop.OBJECT_GET;
                 }
             }
             ////////////////////////////////////////////////////////////
