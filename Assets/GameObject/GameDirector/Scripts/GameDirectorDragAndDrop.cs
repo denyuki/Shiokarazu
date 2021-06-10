@@ -217,6 +217,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                     dragAndDropObject = Instantiate(gearPrefabOne, mousePos, Quaternion.identity);
                     dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = true;
 
+                    dragAndDropObject.name += Random.Range(0, 10000).ToString();
+
                     ////////////////////////////////////////////////////////////
 
                     //ここから巣原が記述
@@ -356,8 +358,6 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     //オブジェクを置く
     void Drop(bool a = true)
     {
-        Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
-
         GearState gearState = dragAndDropObject.GetComponent<GearState>();
         gearState.IsDrag(false);
         gearState.toFirstDrag = false;

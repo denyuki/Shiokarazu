@@ -34,6 +34,8 @@ public class Generator : MonoBehaviour
 
         if (gearState != null && !gearTouch.DragAndDrop)
         {
+            Debug.LogWarning(gearState + "gias");
+
             return ConnectChase(gearState);
         }else
         {
@@ -46,11 +48,18 @@ public class Generator : MonoBehaviour
     {
         //Debug.Break();
 
+        if (!gear.addEnd)
+        {
+            return false;
+        }
+
         Debug.LogWarning("1");
 
         int geraDistance = gear.getGearDistance;
 
         int distance = 0;
+
+        Debug.Log(gear.gameObject.name + "空っぽ" + gear.gearList.Count);
 
         if (!(gear.gearList.Count == 0))
         {
@@ -61,6 +70,7 @@ public class Generator : MonoBehaviour
         int count = 0;
 
         Debug.LogWarning(gear.gearList.Count + "GearListCount");
+
         //ジェネレーターに近いギアを探す
         for (int i = 1; i < gear.gearList.Count; i++)
         {
@@ -70,7 +80,7 @@ public class Generator : MonoBehaviour
                 count = i;
             }
         }
-        //Debug.Break();
+        Debug.LogWarning(count + "かうんと");
 
         nowPower += gear.gearList[count].gearPower;
         Debug.LogWarning("nowPower"+ nowPower + " ClearPower" + clearPower + " GearDistance" + geraDistance);

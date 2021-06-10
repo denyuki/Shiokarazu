@@ -60,6 +60,11 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] GameObject GameOverText;
 
+    //音を鳴らす用
+    [SerializeField] GameObject soundObject;
+    SoundManager soundManager;
+    bool canPlaySound = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,6 +84,9 @@ public class UIManager : MonoBehaviour
         this.stageGearText.SetActive(false);
 
         this.director = this.directorState.GetComponent<GameDirectorState>();
+
+        this.soundManager = this.soundObject.GetComponent<SoundManager>();
+        this.canPlaySound = true;
     }
 
     // Update is called once per frame
@@ -98,15 +106,23 @@ public class UIManager : MonoBehaviour
         }
         else
         {
+            //ゲームオーバー
             this.GameOverText.SetActive(true);
 
+            if (this.canPlaySound)
+            {
+                //ゲームオーバーの音を流す
+                this.soundManager.PlayGameOverSound();
+                this.canPlaySound = false;
+            }
+            
             Invoke("Change", 2.0f);
         }
 
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit2d = Physics2D.Raycast(ray.origin, ray.direction);
 
-        if(hit2d.collider.gameObject.tag == Common.StageGear)
+        if(hit2d.collider != null && hit2d.collider.gameObject.tag == Common.StageGear)
         {
             this.stageGearText.SetActive(true);
             this.stageGearPower.text = " " + hit2d.collider.gameObject.GetComponent<GearState>().ReturnGearReceivePower();

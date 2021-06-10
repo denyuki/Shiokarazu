@@ -52,6 +52,12 @@ public class GearState : MonoBehaviour
     //生成してから最初のドラッグでもギアのリストに追加されないようにするための変数
     public bool toFirstDrag = false;
 
+    //触れている歯車をリストに追加できたかどうかを判定する変数
+    public bool addEnd = false;
+
+    //すでに力を受け取った歯車を保存するリスト
+    public List<GameObject> alreadyGetPower = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -112,10 +118,34 @@ public class GearState : MonoBehaviour
 
     //歯車にかかっている力の大きさを受け取る関数
     //自分より前のギア全ての合計値になる
-    public void GearReceivePower(float power)
+    public void GearReceivePower(float power,GameObject gameObject)
     {
         //かかっている力を登録する
-        this.gearReceivePower = power;
+        //同じ歯車からは一度だけ力を追加する
+        if(this.alreadyGetPower.Count == 0)
+        {
+            if (this.gearDistance == 3)
+            {
+                Debug.Log(power);
+            }
+
+            this.gearReceivePower += power;
+            this.alreadyGetPower.Add(gameObject);
+        }
+        else
+        {
+            for(int i = 0; i < this.alreadyGetPower.Count; ++i)
+            {
+                if(gameObject == this.alreadyGetPower[i])
+                {
+                    return;
+                }
+            }
+
+            this.gearReceivePower += power;
+            this.alreadyGetPower.Add(gameObject);
+        }
+        
     }
 
     //このギアにかかっている力を返す関数
@@ -155,17 +185,18 @@ public class GearState : MonoBehaviour
 
         for(int i = 0;i < this.receivePowerList.Count; ++i)
         {
-            //this.receivePowerList[i].GearReceivePower(this.percentOfReceivePower[i]);
             if(this.gearDistance < this.receivePowerList[i].getGearDistance)
             {
                 //ベルトから力を受け取っている場合はそっちを渡す
-                if(this.beltPower > this.receivePower)
+                if(this.beltPower > this.gearPower)
                 {
-                    this.receivePowerList[i].GearReceivePower(this.receivePower + this.beltPower);
+                    this.receivePowerList[i].GearReceivePower(this.receivePower + this.beltPower,this.gameObject);
                 }
                 else
                 {
-                    this.receivePowerList[i].GearReceivePower(this.receivePower + this.gearPower);
+                    
+
+                    this.receivePowerList[i].GearReceivePower(this.receivePower + this.gearPower,this.gameObject);
                 }
                 
             }
@@ -209,9 +240,8 @@ public class GearState : MonoBehaviour
         //つながっている歯車の情報を持つ
         if (collision.gameObject.tag == Common.Gear ||collision.gameObject.tag == Common.StageGear)
         {
-            Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
-
             bool addList = true;
+
             for (int i = 0; i < gearList.Count; ++i)
             {
                 //Debug.Log(gearList[i].gameObject.name + " " + collision.gameObject.name);
@@ -222,9 +252,13 @@ public class GearState : MonoBehaviour
                 }
             }
 
+            
+
             if (addList)
             {
                 gearList.Add(collision.gameObject.GetComponent<GearState>());
+
+                Debug.LogError(collision.gameObject.name);
 
                 if (!this.startGear)
                 {
@@ -241,11 +275,12 @@ public class GearState : MonoBehaviour
                             
                         }
                     }
-                    Debug.LogError(collision.gameObject.name);
+                    
                     this.gearDistance = min + 1;
                 }
 
                 Debug.Log(this.gearDistance);
+                this.addEnd = true;
             }
         }
 
@@ -589,17 +624,19 @@ public class GearState : MonoBehaviour
 
                         }
                     }
-                    Debug.LogError(collision.gameObject.name);
+                    Debug.LogError(collision.gameObject.name + "  " + gameObject.name);
                     this.gearDistance = min + 1;
                 }
 
                 Debug.Log(this.gearDistance);
+                this.addEnd = true;
             }
         }
     }
 
     public void IsCollider(Collider2D collision)
     {
+
         if (collision.gameObject.tag == Common.Gear || collision.gameObject.tag == Common.StageGear)
         {
             bool addList = true;
@@ -636,6 +673,7 @@ public class GearState : MonoBehaviour
                 }
 
                 Debug.Log(this.gearDistance);
+                this.addEnd = true;
             }
         }
     }

@@ -34,6 +34,7 @@ public class GearDirector : MonoBehaviour
     {
         //ステージ上のギアの数を取得
         this.gears = GameObject.FindGameObjectsWithTag(Common.Gear);
+        this.gears = GameObject.FindGameObjectsWithTag(Common.StageGear);
         this.gearNum = this.gears.Length;
 
         for (int i = 0; i < gears.Length; ++i)
@@ -43,7 +44,7 @@ public class GearDirector : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         //力を分配するための処理
         for(int i = 0;i < this.gearNumList.Count; ++i)
