@@ -67,6 +67,9 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     Oil oil;
     Belt belt;
 
+    bool oilCheck = false;
+    bool beltCheck = false;
+
     //ここまで巣原が記述
 
     ////////////////////////////////////////////////////////////
@@ -76,7 +79,6 @@ public class GameDirectorDragAndDrop : MonoBehaviour
         OBJECT_GET,
         OBJECT_DRAG,
         OBJECT_DROP,
-        OBJECT_NULL,
     }
     DragAndDrop dragAndDrop = DragAndDrop.OBJECT_GET;
 
@@ -123,6 +125,12 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 break;
         }
 
+        if (oilCheck)
+        {
+            oil.OilUpdate();
+        }
+
+        belt.belt = beltCheck;
     }
 
 
@@ -209,6 +217,8 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                     dragAndDropObject = Instantiate(gearPrefabOne, mousePos, Quaternion.identity);
                     dragAndDropObject.GetComponent<GearTouch>().DragAndDrop = true;
 
+                    dragAndDropObject.name += Random.Range(0, 10000).ToString();
+
                     ////////////////////////////////////////////////////////////
 
                     //ここから巣原が記述
@@ -294,36 +304,12 @@ public class GameDirectorDragAndDrop : MonoBehaviour
                 
             }
             //アイテム工場だったらアイテムを生成
-
             else if (hit2d && hit2d.collider.gameObject.tag == Common.OilFactory)
             {
-                if (!oil.oil)
-                {
-                    oil.CursorChange();
-                    oil.oil = true;
-
-                }
-                else if (oil.oil)
-                {
-                    oil.CursorChangeNormal();
-                    oil.oil = false;
-                }
+                oilCheck = true;
             }
-            else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory)
-            {
-
-                if (!belt.belt)
-                {
-                    belt.CursorChange();
-                    belt.belt = true;
-
-                }
-                else if (belt.belt)
-                {
-                    belt.CursorChangeNormal();
-                    belt.BeltFalse();
-                    belt.belt = false;
-                }
+            else if (hit2d && hit2d.collider.gameObject.tag == Common.BeltFactory){
+                beltCheck = true;
             }
             ////////////////////////////////////////////////////////////
 
@@ -372,8 +358,6 @@ public class GameDirectorDragAndDrop : MonoBehaviour
     //オブジェクを置く
     void Drop(bool a = true)
     {
-        //Debug.LogError("よばれてるよ！！！！！！！！！！！！！！！");
-
         GearState gearState = dragAndDropObject.GetComponent<GearState>();
         gearState.IsDrag(false);
         gearState.toFirstDrag = false;

@@ -14,10 +14,16 @@ public class GameDirectorState : MonoBehaviour
 
     public string nextScene;
 
+    [SerializeField] GameObject SoundObject;
+    SoundManager soundManager;
+    bool canPlaySound = true;
+
     // Start is called before the first frame update
     void Start()
     {
         this.gearDirector = GetComponent<GearDirector>();
+        this.soundManager = this.SoundObject.GetComponent<SoundManager>();
+        this.canPlaySound = true;
     }
 
     // Update is called once per frame
@@ -30,8 +36,16 @@ public class GameDirectorState : MonoBehaviour
 
             this.clearText.SetActive(true);
 
+            if (this.canPlaySound)
+            {
+                this.soundManager.PlayClearSound();
+                this.canPlaySound = false;
+            }
+
             //電流をオンにする
             this.gearDirector.AllCurrentOn();
+
+            
 
             Invoke("ChangeScene", 2.0f);
         }
